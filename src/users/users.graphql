@@ -1,0 +1,29 @@
+type User {
+  id: ID!
+  firstName: String!
+  lastName: String!
+  moilePhone: String!
+  email: String!
+  login: String!
+  password: String!
+  role: String!
+  createdAt: String!
+}
+
+input CreateUserInput {
+  firstName: String!
+  lastName: String!
+  moilePhone: String!
+  email: String!
+  login: String
+  password: String!
+  role: String!
+}
+
+type Query {
+  users: [User]!
+}
+
+type Mutation {
+  createUser(createUserInput: CreateUserInput!): Boolean!
+}
