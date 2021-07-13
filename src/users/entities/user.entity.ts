@@ -27,6 +27,6 @@ export class User {
   @Column({ default: Roles.GUEST })
   role: string;
 
-  @Column('timestamp with time zone')
+  @Column({ type: 'timestamp without time zone', default: () => 'now()' })
   createdAt: string;
 }

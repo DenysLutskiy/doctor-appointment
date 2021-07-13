@@ -16,7 +16,7 @@ export class CreateUserInput {
   @Field({ nullable: false })
   @IsString()
   @Length(10, 15)
-  moilePhone: string;
+  mobilePhone: string;
 
   @Field({ nullable: false })
   @IsDefined()
@@ -31,7 +31,7 @@ export class CreateUserInput {
   @Length(6, 48)
   password: string;
 
-  @Field({ nullable: false })
+  @Field({ nullable: true })
   @IsString()
   @IsDefined()
   role: string;
