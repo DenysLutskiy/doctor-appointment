@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import * as jwt from 'jsonwebtoken';
+import { v1 as uuid } from 'uuid';
 
 import { CreateUserInput } from './dto/create-user.input';
 import { User } from './entities/user.entity';
@@ -20,8 +20,7 @@ export class UsersService {
   async create(createUserInput: CreateUserInput): Promise<User> {
     try {
       if (!createUserInput.login) {
-        createUserInput.login =
-          createUserInput.firstName + Math.round(Math.random() * 1000000);
+        createUserInput.login = createUserInput.firstName + uuid();
       }
       const hash = await bcrypt.hash(createUserInput.password, 12);
       const user = await this.usersRepository.save({
