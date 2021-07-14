@@ -1,15 +1,14 @@
-# ---------------------------------- Querys ---------------------------------- #
-type Query {
-  users: [User]!
+type User {
+  id: ID!
+  firstName: String!
+  lastName: String!
+  mobilePhone: String!
+  email: String!
+  login: String!
+  role: String!
+  createdAt: String!
 }
 
-# --------------------------------- Mutations -------------------------------- #
-type Mutation {
-  createUser(createUserInput: CreateUserInput!): User!
-  signinUser(signinUserInput: SigninUserInput!): SigninUserResponse!
-}
-
-# -------------------------------- Input types ------------------------------- #
 input CreateUserInput {
   firstName: String!
   lastName: String!
@@ -20,25 +19,10 @@ input CreateUserInput {
   role: String
 }
 
-input SigninUserInput {
-  login: String!
-  password: String!
+type Query {
+  users: [User]!
 }
 
-# ------------------------------ Response types ------------------------------ #
-type SigninUserResponse {
-  user: User!
-  token: String!
-}
-
-# --------------------------------- Entities --------------------------------- #
-type User {
-  id: ID!
-  firstName: String!
-  lastName: String!
-  mobilePhone: String!
-  email: String!
-  login: String!
-  role: String!
-  createdAt: String!
+type Mutation {
+  createUser(createUserInput: CreateUserInput!): User!
 }
