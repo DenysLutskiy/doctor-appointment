@@ -48,11 +48,8 @@ export class UsersService {
       if (!passwordsMatch) {
         throw new HttpException('wrong password', HttpStatus.UNAUTHORIZED);
       }
-      const payload: JWTPayloadType = {
-        id: user.id,
-        login: user.login,
-        role: user.role,
-      };
+      const { id, role, login } = user;
+      const payload: JWTPayloadType = { id, role, login };
       const token = jwt.sign(payload, process.env.JWT_SECRET);
       const signInResponse = {
         user,
