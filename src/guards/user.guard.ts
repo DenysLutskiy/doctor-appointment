@@ -12,12 +12,15 @@ import * as jwt from 'jsonwebtoken';
 
 import { JWTPayloadType } from 'src/types/interfaces/payload.interface';
 import { User } from 'src/users/entities/user.entity';
+import { Token } from 'src/auth/entities/token.entity';
 
 @Injectable()
 export class UserGuard implements CanActivate {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
+    @InjectRepository(Token)
+    private tokensRepository: Repository<Token>,
   ) {}
 
   async canActivate(context: ExecutionContext) {
@@ -38,7 +41,14 @@ export class UserGuard implements CanActivate {
       const userPayload: JWTPayloadType = jwt.verify(
         token,
         process.env.JWT_SECRET,
-      ) as JWTPayloadType;
+        async (err, decoded) => {
+          if (err) {
+            await this.tokensRepository.save({ value: token });
+          }
+          return decoded;
+        },
+      ) as unknown as JWTPayloadType;
+
       const user = await this.usersRepository.findOne(userPayload.id);
       if (!user) {
         throw new HttpException('User not found', HttpStatus.UNAUTHORIZED);

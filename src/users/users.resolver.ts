@@ -15,11 +15,6 @@ export class UsersResolver {
     return this.usersService.create(createUserInput);
   }
 
-  @Mutation('signinUser')
-  signin(@Args('signinUserInput') signinUserInput: SigninUserInput) {
-    return this.usersService.signinWithLoginAndPassword(signinUserInput);
-  }
-
   @Query('getMe')
   @UseGuards(UserGuard)
   me(@Context('user') user: User) {
