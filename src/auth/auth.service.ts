@@ -1,8 +1,15 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  CACHE_MANAGER,
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
+import { Cache } from 'cache-manager';
 
 import { signInResponseType } from 'src/types/interfaces/signin-response.interface';
 import { User } from 'src/users/entities/user.entity';
@@ -14,6 +21,7 @@ export class AuthService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
   async signinWithLoginAndPassword(
@@ -40,6 +48,17 @@ export class AuthService {
         token,
       };
       return signInResponse;
+    } catch (err) {
+      throw new HttpException(err, HttpStatus.UNAUTHORIZED);
+    }
+  }
+
+  async signoutUser(token: string) {
+    try {
+      const tokenMeta: any = jwt.decode(token);
+      const tokenTTL = tokenMeta.exp - tokenMeta.iat;
+      await this.cacheManager.set(token, token, { ttl: tokenTTL });
+      return true;
     } catch (err) {
       throw new HttpException(err, HttpStatus.UNAUTHORIZED);
     }
