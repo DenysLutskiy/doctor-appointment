@@ -4,14 +4,29 @@ import { CreateUserInput } from './dto/create-user.input';
 import { UseGuards } from '@nestjs/common';
 import { UserGuard } from 'src/guards/user.guard';
 import { User } from './entities/user.entity';
+import { EditUserInput } from './dto/edit-user.input';
 
 @Resolver('User')
 export class UsersResolver {
   constructor(private readonly usersService: UsersService) {}
 
   @Mutation('createUser')
-  create(@Args('createUserInput') createUserInput: CreateUserInput) {
-    return this.usersService.create(createUserInput);
+  @UseGuards(UserGuard)
+  create(
+    @Args('createUserInput') createUserInput: CreateUserInput,
+    @Context('user') user: User,
+  ) {
+    return this.usersService.create(createUserInput, user);
+  }
+
+  @Mutation('editUser')
+  @UseGuards(UserGuard)
+  edit(
+    @Args('id') userId: string,
+    @Args('editUserInput') editUserInput: EditUserInput,
+    @Context('user') user: User,
+  ) {
+    return this.usersService.edit(userId, editUserInput, user);
   }
 
   @Query('getMe')

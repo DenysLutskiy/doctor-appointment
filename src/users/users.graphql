@@ -7,6 +7,7 @@ type Query {
 # --------------------------------- Mutations -------------------------------- #
 type Mutation {
   createUser(createUserInput: CreateUserInput!): User!
+  editUser(id: ID!, editUserInput: EditUserInput!): User!
 }
 
 # -------------------------------- Input types ------------------------------- #
@@ -17,6 +18,15 @@ input CreateUserInput {
   email: String!
   login: String
   password: String!
+  role: String
+}
+
+input EditUserInput {
+  firstName: String
+  lastName: String
+  mobilePhone: String
+  email: String
+  password: String
   role: String
 }
 

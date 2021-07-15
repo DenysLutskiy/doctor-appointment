@@ -41,7 +41,7 @@ export class AuthService {
       const { id, role, login } = user;
       const payload: JWTPayloadType = { id, role, login };
       const token = jwt.sign(payload, process.env.JWT_SECRET, {
-        expiresIn: '1m',
+        expiresIn: '15m',
       });
       const signInResponse = {
         user,
