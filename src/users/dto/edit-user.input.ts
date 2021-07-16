@@ -1,33 +1,47 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { IsDefined, IsString, Length, IsEmail, Min } from 'class-validator';
+import {
+  IsDefined,
+  IsString,
+  Length,
+  IsEmail,
+  IsOptional,
+  MinLength,
+} from 'class-validator';
 
 @InputType()
 export class EditUserInput {
-  @Field({ nullable: true })
+  @Field()
   @IsString()
-  @Min(2)
+  @MinLength(2)
+  @IsOptional()
   firstName: string;
 
-  @Field({ nullable: true })
+  @Field()
   @IsString()
-  @Min(2)
+  @MinLength(2)
+  @IsOptional()
   lastName: string;
 
-  @Field({ nullable: true })
+  @Field()
   @IsString()
   @Length(10, 15)
+  @IsOptional()
   mobilePhone: string;
 
-  @Field({ nullable: true })
+  @Field()
   @IsEmail()
+  @IsDefined()
+  @IsOptional()
   email: string;
 
-  @Field({ nullable: true })
+  @Field()
   @IsString()
   @Length(6, 48)
+  @IsOptional()
   password: string;
 
-  @Field({ nullable: true })
+  @Field()
   @IsString()
+  @IsOptional()
   role: string;
 }
