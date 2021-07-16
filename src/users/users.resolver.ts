@@ -6,45 +6,30 @@ import { UserGuard } from 'src/guards/user.guard';
 import { User } from './entities/user.entity';
 import { EditUserInput } from './dto/edit-user.input';
 import { Roles } from 'src/types/enums/user-roles.enum';
+import { AdminGuard } from 'src/guards/admin.guard';
 
 @Resolver('User')
 export class UsersResolver {
   constructor(private readonly usersService: UsersService) {}
 
   @Mutation('createUser')
-  @UseGuards(UserGuard)
-  create(
-    @Args('createUserInput') createUserInput: CreateUserInput,
-    @Context('user') user: User,
-  ) {
-    return this.usersService.create(createUserInput, user);
+  @UseGuards(AdminGuard)
+  create(@Args('createUserInput') createUserInput: CreateUserInput) {
+    return this.usersService.create(createUserInput);
   }
 
   @Mutation('editUser')
-  @UseGuards(UserGuard)
+  @UseGuards(AdminGuard)
   edit(
     @Args('id') userId: string,
     @Args('editUserInput') editUserInput: EditUserInput,
-    @Context('user') user: User,
   ) {
-    if (user.role !== Roles.ADMIN) {
-      throw new HttpException(
-        "You don't have permissions",
-        HttpStatus.UNAUTHORIZED,
-      );
-    }
     return this.usersService.edit(userId, editUserInput);
   }
 
   @Mutation('deleteUser')
-  @UseGuards(UserGuard)
-  delete(@Args('id') userId: string, @Context('user') user: User) {
-    if (user.role !== Roles.ADMIN) {
-      throw new HttpException(
-        "You don't have permissions",
-        HttpStatus.UNAUTHORIZED,
-      );
-    }
+  @UseGuards(AdminGuard)
+  delete(@Args('id') userId: string) {
     return this.usersService.delete(userId);
   }
 

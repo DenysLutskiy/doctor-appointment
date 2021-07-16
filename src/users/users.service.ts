@@ -16,14 +16,8 @@ export class UsersService {
     private usersRepository: Repository<User>,
   ) {}
 
-  async create(createUserInput: CreateUserInput, user: User): Promise<User> {
+  async create(createUserInput: CreateUserInput): Promise<User> {
     try {
-      if (user.role !== Roles.ADMIN) {
-        throw new HttpException(
-          "You don't have permissions",
-          HttpStatus.UNAUTHORIZED,
-        );
-      }
       if (!createUserInput.login) {
         createUserInput.login = createUserInput.firstName + uuid();
       }
@@ -40,13 +34,8 @@ export class UsersService {
 
   async edit(userId: string, editUserInput: EditUserInput) {
     try {
-      if (typeof editUserInput.password === 'string') {
-        let hash = await bcrypt.hash(editUserInput.password, 12);
-        await this.usersRepository.update(userId, {
-          ...editUserInput,
-          password: hash,
-        });
-        return await this.usersRepository.findOne(userId);
+      if (editUserInput.password) {
+        editUserInput.password = await bcrypt.hash(editUserInput.password, 12);
       }
       await this.usersRepository.update(userId, editUserInput);
       return await this.usersRepository.findOne(userId);

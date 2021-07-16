@@ -6,16 +6,16 @@ export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ nullable: true })
+  @Column()
   firstName: string;
 
-  @Column({ nullable: true })
+  @Column()
   lastName: string;
 
-  @Column({ nullable: true })
+  @Column()
   mobilePhone: string;
 
-  @Column({ nullable: true, unique: true })
+  @Column({ unique: true })
   email: string;
 
   @Column({ unique: true })

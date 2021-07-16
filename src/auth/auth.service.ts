@@ -24,6 +24,31 @@ export class AuthService {
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
+  async validateToken(auth: string) {
+    if (auth.split(' ')[0] !== 'Bearer') {
+      throw new HttpException('Invalid token', HttpStatus.UNAUTHORIZED);
+    }
+    const token = auth.split(' ')[1];
+    const tknRevoked = await this.cacheManager.get(token);
+    try {
+      if (tknRevoked) {
+        throw new HttpException('Token is revoked', HttpStatus.UNAUTHORIZED);
+      }
+      const userPayload: JWTPayloadType = jwt.verify(
+        token,
+        process.env.JWT_SECRET,
+      ) as JWTPayloadType;
+
+      const user = await this.usersRepository.findOne(userPayload.id);
+      if (!user) {
+        throw new HttpException('User not found', HttpStatus.UNAUTHORIZED);
+      }
+      return user;
+    } catch (err) {
+      throw new HttpException(err, HttpStatus.UNAUTHORIZED);
+    }
+  }
+
   async signinWithLoginAndPassword(
     signInProps: SigninUserInput,
   ): Promise<signInResponseType> {
@@ -41,7 +66,7 @@ export class AuthService {
       const { id, role, login } = user;
       const payload: JWTPayloadType = { id, role, login };
       const token = jwt.sign(payload, process.env.JWT_SECRET, {
-        expiresIn: '15m',
+        expiresIn: '7d',
       });
       const signInResponse = {
         user,
@@ -55,7 +80,7 @@ export class AuthService {
 
   async signoutUser(token: string) {
     try {
-      const tokenMeta: any = jwt.decode(token);
+      const tokenMeta: JWTPayloadType = jwt.decode(token) as JWTPayloadType;
       const tokenTTL = tokenMeta.exp - tokenMeta.iat;
       await this.cacheManager.set(token, token, { ttl: tokenTTL });
       return true;

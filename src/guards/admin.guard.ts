@@ -1,10 +1,17 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import {
+  CanActivate,
+  ExecutionContext,
+  HttpException,
+  HttpStatus,
+  Injectable,
+} from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 
 import { AuthService } from 'src/auth/auth.service';
+import { Roles } from 'src/types/enums/user-roles.enum';
 
 @Injectable()
-export class UserGuard implements CanActivate {
+export class AdminGuard implements CanActivate {
   constructor(private readonly authService: AuthService) {}
 
   async canActivate(context: ExecutionContext) {
@@ -15,8 +22,13 @@ export class UserGuard implements CanActivate {
     ctx.user = await this.authService.validateToken(
       ctx.req.headers.autorization,
     );
-    ctx.token = ctx.req.headers.autorization.split(' ')[1];
 
+    if (ctx.user.role !== Roles.ADMIN) {
+      throw new HttpException(
+        "You don't have permissions",
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
     return true;
   }
 }
