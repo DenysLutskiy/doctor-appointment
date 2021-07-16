@@ -1,10 +1,11 @@
 import { Resolver, Query, Mutation, Args, Context } from '@nestjs/graphql';
 import { UsersService } from './users.service';
 import { CreateUserInput } from './dto/create-user.input';
-import { UseGuards } from '@nestjs/common';
+import { HttpException, HttpStatus, UseGuards } from '@nestjs/common';
 import { UserGuard } from 'src/guards/user.guard';
 import { User } from './entities/user.entity';
 import { EditUserInput } from './dto/edit-user.input';
+import { Roles } from 'src/types/enums/user-roles.enum';
 
 @Resolver('User')
 export class UsersResolver {
@@ -26,7 +27,25 @@ export class UsersResolver {
     @Args('editUserInput') editUserInput: EditUserInput,
     @Context('user') user: User,
   ) {
-    return this.usersService.edit(userId, editUserInput, user);
+    if (user.role !== Roles.ADMIN) {
+      throw new HttpException(
+        "You don't have permissions",
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+    return this.usersService.edit(userId, editUserInput);
+  }
+
+  @Mutation('deleteUser')
+  @UseGuards(UserGuard)
+  delete(@Args('id') userId: string, @Context('user') user: User) {
+    if (user.role !== Roles.ADMIN) {
+      throw new HttpException(
+        "You don't have permissions",
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+    return this.usersService.delete(userId);
   }
 
   @Query('getMe')

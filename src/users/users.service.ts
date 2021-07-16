@@ -38,16 +38,8 @@ export class UsersService {
     }
   }
 
-  async edit(userId: string, editUserInput: EditUserInput, user: User) {
+  async edit(userId: string, editUserInput: EditUserInput) {
     try {
-      if (user.role !== Roles.ADMIN) {
-        throw new HttpException(
-          "You don't have permissions",
-          HttpStatus.UNAUTHORIZED,
-        );
-      }
-      console.log(typeof editUserInput.password);
-
       if (typeof editUserInput.password === 'string') {
         let hash = await bcrypt.hash(editUserInput.password, 12);
         await this.usersRepository.update(userId, {
@@ -58,6 +50,29 @@ export class UsersService {
       }
       await this.usersRepository.update(userId, editUserInput);
       return await this.usersRepository.findOne(userId);
+    } catch (err) {
+      throw new HttpException(err, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async delete(userId: string) {
+    try {
+      const user = await this.usersRepository.findOne(userId);
+      if (user.role !== Roles.ADMIN) {
+        await this.usersRepository.delete(userId);
+        return true;
+      }
+      const admins = await this.usersRepository.find({
+        where: { role: 'admin' },
+      });
+      if (admins.length >= 2) {
+        await this.usersRepository.delete(userId);
+        return true;
+      }
+      throw new HttpException(
+        'You cannot delete the last admin in the database',
+        HttpStatus.BAD_REQUEST,
+      );
     } catch (err) {
       throw new HttpException(err, HttpStatus.BAD_REQUEST);
     }
