@@ -1,8 +1,8 @@
 import { CacheModule, Module } from '@nestjs/common';
-import { UsersService } from './users.service';
-import { UsersResolver } from './users.resolver';
+import { AuthService } from './auth.service';
+import { AuthResolver } from './auth.resolver';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from './entities/user.entity';
+import { User } from 'src/users/entities/user.entity';
 import * as REDIS_CONFIG from 'src/config/redis';
 
 @Module({
@@ -10,7 +10,6 @@ import * as REDIS_CONFIG from 'src/config/redis';
     CacheModule.register(REDIS_CONFIG),
     TypeOrmModule.forFeature([User]),
   ],
-  providers: [UsersResolver, UsersService],
-  exports: [TypeOrmModule],
+  providers: [AuthResolver, AuthService],
 })
-export class UsersModule {}
+export class AuthModule {}

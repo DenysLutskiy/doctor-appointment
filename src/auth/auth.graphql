@@ -1,0 +1,21 @@
+# ---------------------------------- Querys ---------------------------------- #
+type Query {
+  signoutUser: Boolean!
+}
+
+# --------------------------------- Mutations -------------------------------- #
+type Mutation {
+  signinUser(signinUserInput: SigninUserInput!): SigninUserResponse!
+}
+
+# -------------------------------- Input types ------------------------------- #
+input SigninUserInput {
+  login: String!
+  password: String!
+}
+
+# ------------------------------ Response types ------------------------------ #
+type SigninUserResponse {
+  user: User!
+  token: String!
+}
