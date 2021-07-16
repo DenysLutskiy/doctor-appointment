@@ -41,7 +41,7 @@ export class AuthService {
       const { id, role, login } = user;
       const payload: JWTPayloadType = { id, role, login };
       const token = jwt.sign(payload, process.env.JWT_SECRET, {
-        expiresIn: '15m',
+        expiresIn: '7d',
       });
       const signInResponse = {
         user,
@@ -55,8 +55,10 @@ export class AuthService {
 
   async signoutUser(token: string) {
     try {
-      const tokenMeta: any = jwt.decode(token);
+      const tokenMeta: JWTPayloadType = jwt.decode(token) as JWTPayloadType;
       const tokenTTL = tokenMeta.exp - tokenMeta.iat;
+      console.log(tokenTTL);
+
       await this.cacheManager.set(token, token, { ttl: tokenTTL });
       return true;
     } catch (err) {
