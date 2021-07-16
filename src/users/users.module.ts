@@ -3,14 +3,11 @@ import { UsersService } from './users.service';
 import { UsersResolver } from './users.resolver';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
-import * as redisStore from 'cache-manager-redis-store';
+import * as REDIS_CONFIG from 'src/config/redis';
+
 @Module({
   imports: [
-    CacheModule.register({
-      store: redisStore,
-      host: 'localhost',
-      port: 6379,
-    }),
+    CacheModule.register(REDIS_CONFIG),
     TypeOrmModule.forFeature([User]),
   ],
   providers: [UsersResolver, UsersService],
