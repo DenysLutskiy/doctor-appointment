@@ -11,5 +11,6 @@ import * as REDIS_CONFIG from 'src/config/redis';
     TypeOrmModule.forFeature([User]),
   ],
   providers: [AuthResolver, AuthService],
+  exports: [TypeOrmModule],
 })
 export class AuthModule {}
