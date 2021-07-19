@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { CreateHospitalInput } from './dto/create-hospital.input';
 import { EditHospitalInput } from './dto/edit-hospital.input';
 import { Hospital } from './entities/hospital.entity';
@@ -60,6 +60,28 @@ export class HospitalsService {
     try {
       await this.hospitalsRepository.delete(id);
       return true;
+    } catch (err) {
+      throw new HttpException(err, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  findAll(filter: undefined | string) {
+    try {
+      if (filter) {
+        const text = ILike(`%${filter}%`);
+        return this.hospitalsRepository.find({
+          where: [{ name: text }, { address: text }],
+        });
+      }
+      return this.hospitalsRepository.find();
+    } catch (err) {
+      throw new HttpException(err, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  findOne(id: string) {
+    try {
+      return this.hospitalsRepository.findOne(id);
     } catch (err) {
       throw new HttpException(err, HttpStatus.BAD_REQUEST);
     }

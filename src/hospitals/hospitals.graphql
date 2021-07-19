@@ -1,6 +1,7 @@
 # ---------------------------------- Querys ---------------------------------- #
 type Query {
-  hospitals: [Hospital]!
+  hospitals(filter: String!): [Hospital]!
+  hospital(id: ID!): Hospital!
 }
 
 # --------------------------------- Mutations -------------------------------- #

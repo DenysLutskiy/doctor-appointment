@@ -4,6 +4,7 @@ import { CreateHospitalInput } from './dto/create-hospital.input';
 import { UseGuards } from '@nestjs/common';
 import { AdminGuard } from 'src/guards/admin.guard';
 import { EditHospitalInput } from './dto/edit-hospital.input';
+import { UserGuard } from 'src/guards/user.guard';
 
 @Resolver('Hospital')
 export class HospitalsResolver {
@@ -41,13 +42,15 @@ export class HospitalsResolver {
     return this.hospitalsService.delete(hospitalId);
   }
 
-  // @Query('hospitals')
-  // findAll() {
-  //   return this.hospitalsService.findAll();
-  // }
+  @Query('hospitals')
+  @UseGuards(UserGuard)
+  findAll(@Args('filter') filter?: string) {
+    return this.hospitalsService.findAll(filter);
+  }
 
-  // @Query('hospital')
-  // findOne(@Args('id') id: number) {
-  //   return this.hospitalsService.findOne(id);
-  // }
+  @Query('hospital')
+  @UseGuards(UserGuard)
+  findOne(@Args('id') hospitalId: string) {
+    return this.hospitalsService.findOne(hospitalId);
+  }
 }
