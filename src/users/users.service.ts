@@ -47,21 +47,23 @@ export class UsersService {
   async delete(userId: string) {
     try {
       const user = await this.usersRepository.findOne(userId);
-      if (user.role !== Roles.ADMIN) {
-        await this.usersRepository.delete(userId);
-        return true;
+      let admins = [];
+      if (!user) {
+        throw new HttpException('User not found', HttpStatus.BAD_REQUEST);
       }
-      const admins = await this.usersRepository.find({
-        where: { role: 'admin' },
-      });
-      if (admins.length >= 2) {
-        await this.usersRepository.delete(userId);
-        return true;
+      if (user.role === Roles.ADMIN) {
+        admins = await this.usersRepository.find({
+          where: { role: 'admin' },
+        });
       }
-      throw new HttpException(
-        'You cannot delete the last admin in the database',
-        HttpStatus.BAD_REQUEST,
-      );
+      if (user.role === Roles.ADMIN && admins.length === 1) {
+        throw new HttpException(
+          'You cannot delete the last admin in the database',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+      await this.usersRepository.delete(userId);
+      return true;
     } catch (err) {
       throw new HttpException(err, HttpStatus.BAD_REQUEST);
     }
