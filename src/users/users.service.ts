@@ -6,6 +6,7 @@ import { v1 as uuid } from 'uuid';
 
 import { CreateUserInput } from './dto/create-user.input';
 import { User } from './entities/user.entity';
+import { EditUserInput } from './dto/edit-user.input';
 
 @Injectable()
 export class UsersService {
@@ -20,11 +21,23 @@ export class UsersService {
         createUserInput.login = createUserInput.firstName + uuid();
       }
       const hash = await bcrypt.hash(createUserInput.password, 12);
-      const user = await this.usersRepository.save({
+      const createdUser = await this.usersRepository.save({
         ...createUserInput,
         password: hash,
       });
-      return user;
+      return createdUser;
+    } catch (err) {
+      throw new HttpException(err, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async edit(userId: string, editUserInput: EditUserInput) {
+    try {
+      if (editUserInput.password) {
+        editUserInput.password = await bcrypt.hash(editUserInput.password, 12);
+      }
+      await this.usersRepository.update(userId, editUserInput);
+      return await this.usersRepository.findOne(userId);
     } catch (err) {
       throw new HttpException(err, HttpStatus.BAD_REQUEST);
     }

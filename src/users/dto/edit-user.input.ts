@@ -9,34 +9,35 @@ import {
 } from 'class-validator';
 
 @InputType()
-export class CreateUserInput {
+export class EditUserInput {
   @Field()
   @IsString()
   @MinLength(2)
+  @IsOptional()
   firstName: string;
 
   @Field()
   @IsString()
   @MinLength(2)
+  @IsOptional()
   lastName: string;
 
   @Field()
   @IsString()
   @Length(10, 15)
+  @IsOptional()
   mobilePhone: string;
 
   @Field()
-  @IsDefined()
   @IsEmail()
-  email: string;
-
-  @Field()
+  @IsDefined()
   @IsOptional()
-  login: string;
+  email: string;
 
   @Field()
   @IsString()
   @Length(6, 48)
+  @IsOptional()
   password: string;
 
   @Field()
