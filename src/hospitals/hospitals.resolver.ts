@@ -21,9 +21,18 @@ export class HospitalsResolver {
   @UseGuards(AdminGuard)
   edit(
     @Args('id') hospitalId: string,
-    @Args('updateHospitalInput') editHospitalInput: EditHospitalInput,
+    @Args('editHospitalInput') editHospitalInput: EditHospitalInput,
   ) {
     return this.hospitalsService.edit(hospitalId, editHospitalInput);
+  }
+
+  @Mutation('deletePhoneNumber')
+  @UseGuards(AdminGuard)
+  deletePhoneNumber(
+    @Args('id') hospitalId: string,
+    @Args('phoneNumbers') phoneNumbers: string[],
+  ) {
+    return this.hospitalsService.deletePhoneNumber(hospitalId, phoneNumbers);
   }
 
   @Mutation('deleteHospital')

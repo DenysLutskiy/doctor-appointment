@@ -14,10 +14,7 @@ export class HospitalsService {
 
   async create(createHospitalInput: CreateHospitalInput) {
     try {
-      return await this.hospitalsRepository.save({
-        ...createHospitalInput,
-        phoneNumbers: createHospitalInput.phoneNumbers.join(', '),
-      });
+      return await this.hospitalsRepository.save(createHospitalInput);
     } catch (err) {
       throw new HttpException(err, HttpStatus.BAD_REQUEST);
     }
@@ -25,9 +22,34 @@ export class HospitalsService {
 
   async edit(id: string, editHospitalInput: EditHospitalInput) {
     try {
+      const hospital = await this.hospitalsRepository.findOne(id);
+      const numbers = new Set([
+        ...hospital.phoneNumbers,
+        ...editHospitalInput.phoneNumbers,
+      ]);
       return await this.hospitalsRepository.update(id, {
         ...editHospitalInput,
-        phoneNumbers: editHospitalInput.phoneNumbers.join(' '),
+        phoneNumbers: Array.from(numbers),
+      });
+    } catch (err) {
+      throw new HttpException(err, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async deletePhoneNumber(id: string, phoneNumbers: string[]) {
+    try {
+      const hospital = await this.hospitalsRepository.findOne(id);
+      if (phoneNumbers.length >= hospital.phoneNumbers.length) {
+        throw new HttpException(
+          `At least one number must remain`,
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+      const remainingNumbers = hospital.phoneNumbers.filter(
+        (n) => !phoneNumbers.includes(n),
+      );
+      return await this.hospitalsRepository.update(id, {
+        phoneNumbers: remainingNumbers,
       });
     } catch (err) {
       throw new HttpException(err, HttpStatus.BAD_REQUEST);

@@ -11,8 +11,8 @@ export class Hospital {
   @Column()
   address: string;
 
-  @Column()
-  phoneNumbers: string;
+  @Column('text', { array: true })
+  phoneNumbers: string[];
 
   @Column({ type: 'timestamp without time zone', default: () => 'now()' })
   createdAt: string;

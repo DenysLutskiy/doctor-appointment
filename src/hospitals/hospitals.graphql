@@ -7,6 +7,7 @@ type Query {
 type Mutation {
   createHospital(createHospitalInput: CreateHospitalInput!): Hospital!
   editHospital(id: ID!, editHospitalInput: EditHospitalInput!): Hospital!
+  deletePhoneNumber(id: ID!, phoneNumbers: [String!]!): Hospital!
   deleteHospital(id: ID!): Boolean!
 }
 
@@ -18,9 +19,9 @@ input CreateHospitalInput {
 }
 
 input EditHospitalInput {
-  name: String!
-  address: String!
-  phoneNumbers: [String!]!
+  name: String
+  address: String
+  phoneNumbers: [String!]
 }
 
 # --------------------------------- Entities --------------------------------- #
@@ -28,6 +29,6 @@ type Hospital {
   id: ID!
   name: String!
   address: String!
-  phoneNumbers: String!
+  phoneNumbers: [String!]!
   createdAt: String!
 }
