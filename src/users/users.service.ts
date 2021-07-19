@@ -7,6 +7,7 @@ import { v1 as uuid } from 'uuid';
 import { CreateUserInput } from './dto/create-user.input';
 import { User } from './entities/user.entity';
 import { EditUserInput } from './dto/edit-user.input';
+import { Roles } from 'src/types/enums/user-roles.enum';
 
 @Injectable()
 export class UsersService {
@@ -38,6 +39,31 @@ export class UsersService {
       }
       await this.usersRepository.update(userId, editUserInput);
       return await this.usersRepository.findOne(userId);
+    } catch (err) {
+      throw new HttpException(err, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async delete(userId: string) {
+    try {
+      const user = await this.usersRepository.findOne(userId);
+      let admins = [];
+      if (!user) {
+        throw new HttpException('User not found', HttpStatus.BAD_REQUEST);
+      }
+      if (user.role === Roles.ADMIN) {
+        admins = await this.usersRepository.find({
+          where: { role: 'admin' },
+        });
+      }
+      if (user.role === Roles.ADMIN && admins.length === 1) {
+        throw new HttpException(
+          'You cannot delete the last admin in the database',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+      await this.usersRepository.delete(userId);
+      return true;
     } catch (err) {
       throw new HttpException(err, HttpStatus.BAD_REQUEST);
     }

@@ -8,6 +8,7 @@ type Query {
 type Mutation {
   createUser(createUserInput: CreateUserInput!): User!
   editUser(id: ID!, editUserInput: EditUserInput!): User!
+  deleteUser(id: ID!): Boolean!
 }
 
 # -------------------------------- Input types ------------------------------- #
