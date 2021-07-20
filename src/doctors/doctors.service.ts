@@ -47,4 +47,14 @@ export class DoctorsService {
       throw new HttpException(err, HttpStatus.BAD_REQUEST);
     }
   }
+
+  async findByIds(ids: any) {
+    try {
+      return await this.doctorsRepository.findByIds(ids, {
+        relations: ['user', 'specialization'],
+      });
+    } catch (err) {
+      throw new HttpException(err, HttpStatus.BAD_REQUEST);
+    }
+  }
 }
