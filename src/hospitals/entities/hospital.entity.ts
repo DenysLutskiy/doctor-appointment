@@ -20,5 +20,5 @@ export class Hospital {
   phoneNumbers: string[];
 
   @CreateDateColumn()
-  createdAt: string;
+  createdAt: Date;
 }
