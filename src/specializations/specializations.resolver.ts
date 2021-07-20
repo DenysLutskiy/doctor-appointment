@@ -15,30 +15,4 @@ export class SpecializationsResolver {
   ) {
     return this.specializationsService.create(createSpecializationInput);
   }
-
-  // @Mutation('updateSpecialization')
-  // update(
-  //   @Args('updateSpecializationInput')
-  //   updateSpecializationInput: UpdateSpecializationInput,
-  // ) {
-  //   return this.specializationsService.update(
-  //     updateSpecializationInput.id,
-  //     updateSpecializationInput,
-  //   );
-  // }
-
-  // @Mutation('removeSpecialization')
-  // remove(@Args('id') id: number) {
-  //   return this.specializationsService.remove(id);
-  // }
-
-  // @Query('specializations')
-  // findAll() {
-  //   return this.specializationsService.findAll();
-  // }
-
-  // @Query('specialization')
-  // findOne(@Args('id') id: number) {
-  //   return this.specializationsService.findOne(id);
-  // }
 }
