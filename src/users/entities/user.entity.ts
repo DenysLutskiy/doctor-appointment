@@ -1,5 +1,10 @@
 import { Roles } from 'src/types/enums/user-roles.enum';
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+} from 'typeorm';
 
 @Entity({ name: 'users' })
 export class User {
@@ -27,6 +32,6 @@ export class User {
   @Column({ default: Roles.GUEST })
   role: string;
 
-  @Column({ type: 'timestamp without time zone', default: () => 'now()' })
-  createdAt: string;
+  @CreateDateColumn()
+  createdAt: Date;
 }

@@ -1,6 +1,11 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
-@Entity({ name: 'hospitals' })
+@Entity({ name: 'specializations' })
 export class Specialization {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -8,6 +13,6 @@ export class Specialization {
   @Column()
   name: string;
 
-  @Column({ type: 'timestamp without time zone', default: () => 'now()' })
+  @CreateDateColumn()
   createdAt: string;
 }
