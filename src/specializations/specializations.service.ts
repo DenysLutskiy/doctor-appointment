@@ -14,4 +14,9 @@ export class SpecializationsService {
   create(createSpecializationInput: CreateSpecializationInput) {
     return this.specializationRepository.save(createSpecializationInput);
   }
+
+  async findOne(id: string) {
+    const specialization = await this.specializationRepository.findOne(id);
+    return specialization;
+  }
 }

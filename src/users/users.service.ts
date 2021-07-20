@@ -72,4 +72,9 @@ export class UsersService {
   findAll() {
     return this.usersRepository.find();
   }
+
+  async findOne(id: string) {
+    const user = await this.usersRepository.findOne(id);
+    return user;
+  }
 }

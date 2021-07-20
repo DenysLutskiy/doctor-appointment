@@ -1,0 +1,31 @@
+# ---------------------------------- Querys ---------------------------------- #
+type Query {
+  doctors: [Doctor]!
+}
+
+# --------------------------------- Mutations -------------------------------- #
+type Mutation {
+  createDoctor(createDoctorInput: CreateDoctorInput!): Doctor!
+}
+
+# -------------------------------- Input types ------------------------------- #
+input CreateDoctorInput {
+  userId: String!
+  specializationId: String!
+  level: String!
+}
+
+input EditDoctorInput {
+  userId: String!
+  specializationId: String!
+  level: String!
+}
+
+# --------------------------------- Entities --------------------------------- #
+type Doctor {
+  id: ID!
+  user: User!
+  specialization: Specialization!
+  level: String!
+  createdAt: String!
+}
