@@ -5,6 +5,8 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
+  ManyToOne,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -18,9 +20,12 @@ export class Doctor {
   @JoinColumn()
   user: User;
 
-  @OneToOne(() => Specialization)
-  @JoinColumn()
+  @ManyToOne(() => Specialization, (specialization) => specialization.doctors)
+  @JoinColumn({ name: 'specializationId' })
   specialization: Specialization;
+
+  @Column()
+  specializationId: string;
 
   @Column()
   level: string;
