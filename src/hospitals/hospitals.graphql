@@ -1,6 +1,6 @@
 # ---------------------------------- Querys ---------------------------------- #
 type Query {
-  hospitals(filter: String!): [Hospital]!
+  hospitals(filter: String): [Hospital]!
   hospital(id: ID!): Hospital!
 }
 

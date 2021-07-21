@@ -7,7 +7,6 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
-  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -18,8 +17,11 @@ export class Doctor {
   id: string;
 
   @OneToOne(() => User)
-  @JoinColumn()
+  @JoinColumn({ name: 'userId' })
   user: User;
+
+  @Column()
+  userId: string;
 
   @ManyToOne(() => Specialization, (specialization) => specialization.doctors)
   @JoinColumn({ name: 'specializationId' })

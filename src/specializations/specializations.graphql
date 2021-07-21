@@ -1,27 +1,12 @@
-# ---------------------------------- Querys ---------------------------------- #
-type Query {
-  specializations: [Specialization]!
-  specialization(id: ID!): Specialization!
-}
-
 # --------------------------------- Mutations -------------------------------- #
 type Mutation {
   createSpecialization(
     createSpecializationInput: CreateSpecializationInput!
   ): Specialization!
-  editSpecialization(
-    id: ID!
-    editSpecializationInput: EditSpecializationInput!
-  ): Specialization!
-  deleteSpecialization(id: ID!): Boolean!
 }
 
 # -------------------------------- Input types ------------------------------- #
 input CreateSpecializationInput {
-  name: String!
-}
-
-input EditSpecializationInput {
   name: String!
 }
 

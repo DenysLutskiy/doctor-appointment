@@ -1,5 +1,6 @@
-import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
+import { Resolver, Mutation, Args } from '@nestjs/graphql';
 import { CreateSpecializationInput } from './dto/create-specialization.input';
+import { Specialization } from './entities/specialization.entity';
 import { SpecializationsService } from './specializations.service';
 
 @Resolver('Specialization')
@@ -12,7 +13,7 @@ export class SpecializationsResolver {
   create(
     @Args('createSpecializationInput')
     createSpecializationInput: CreateSpecializationInput,
-  ) {
+  ): Promise<Specialization> {
     return this.specializationsService.create(createSpecializationInput);
   }
 }

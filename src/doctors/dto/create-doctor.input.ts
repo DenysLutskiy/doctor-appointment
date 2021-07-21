@@ -1,5 +1,5 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { IsDefined, IsString, IsArray } from 'class-validator';
+import { IsDefined, IsString } from 'class-validator';
 
 @InputType()
 export class CreateDoctorInput {
