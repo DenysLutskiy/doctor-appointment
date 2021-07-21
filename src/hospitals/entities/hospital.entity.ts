@@ -1,9 +1,4 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'hospitals' })
 export class Hospital {
@@ -19,6 +14,6 @@ export class Hospital {
   @Column('text', { array: true })
   phoneNumbers: string[];
 
-  @CreateDateColumn()
-  createdAt: Date;
+  @Column({ type: 'timestamp without time zone', default: () => 'now()' })
+  createdAt: string;
 }
