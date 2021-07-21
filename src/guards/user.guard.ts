@@ -7,7 +7,7 @@ import { AuthService } from 'src/auth/auth.service';
 export class UserGuard implements CanActivate {
   constructor(private readonly authService: AuthService) {}
 
-  async canActivate(context: ExecutionContext) {
+  async canActivate(context: ExecutionContext): Promise<boolean> {
     const ctx = GqlExecutionContext.create(context).getContext();
     if (!ctx.req.headers.autorization) {
       return false;
