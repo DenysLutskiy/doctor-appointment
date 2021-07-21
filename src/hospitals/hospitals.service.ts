@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { UpdateResult } from 'typeorm/query-builder/result/UpdateResult';
 import { CreateHospitalInput } from './dto/create-hospital.input';
 import { EditHospitalInput } from './dto/edit-hospital.input';
 import { Hospital } from './entities/hospital.entity';
@@ -12,7 +13,7 @@ export class HospitalsService {
     private hospitalsRepository: Repository<Hospital>,
   ) {}
 
-  async create(createHospitalInput: CreateHospitalInput) {
+  async create(createHospitalInput: CreateHospitalInput): Promise<Hospital> {
     try {
       return await this.hospitalsRepository.save(createHospitalInput);
     } catch (err) {
@@ -20,7 +21,10 @@ export class HospitalsService {
     }
   }
 
-  async edit(id: string, editHospitalInput: EditHospitalInput) {
+  async edit(
+    id: string,
+    editHospitalInput: EditHospitalInput,
+  ): Promise<UpdateResult> {
     try {
       const hospital = await this.hospitalsRepository.findOne(id);
       const numbers = new Set([
@@ -36,7 +40,10 @@ export class HospitalsService {
     }
   }
 
-  async deletePhoneNumber(id: string, phoneNumbers: string[]) {
+  async deletePhoneNumber(
+    id: string,
+    phoneNumbers: string[],
+  ): Promise<UpdateResult> {
     try {
       const hospital = await this.hospitalsRepository.findOne(id);
       if (phoneNumbers.length >= hospital.phoneNumbers.length) {
@@ -56,7 +63,7 @@ export class HospitalsService {
     }
   }
 
-  async delete(id: string) {
+  async delete(id: string): Promise<boolean> {
     try {
       await this.hospitalsRepository.delete(id);
       return true;

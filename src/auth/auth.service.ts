@@ -24,7 +24,7 @@ export class AuthService {
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
-  async validateToken(auth: string) {
+  async validateToken(auth: string): Promise<User> {
     if (auth.split(' ')[0] !== 'Bearer') {
       throw new HttpException('Invalid token', HttpStatus.UNAUTHORIZED);
     }
@@ -78,7 +78,7 @@ export class AuthService {
     }
   }
 
-  async signoutUser(token: string) {
+  async signoutUser(token: string): Promise<boolean> {
     try {
       const tokenMeta: JWTPayloadType = jwt.decode(token) as JWTPayloadType;
       const tokenTTL = tokenMeta.exp - tokenMeta.iat;

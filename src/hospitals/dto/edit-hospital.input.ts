@@ -1,5 +1,5 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { IsDefined, IsString, IsArray, IsOptional } from 'class-validator';
+import { IsString, IsArray, IsOptional } from 'class-validator';
 
 @InputType()
 export class EditHospitalInput {
