@@ -11,13 +11,13 @@ type Mutation {
 # -------------------------------- Input types ------------------------------- #
 input CreateRoomInput {
   name: String!
-  doctors: [String]!
+  doctorId: String
 }
 
 # --------------------------------- Entities --------------------------------- #
 type Room {
   id: ID!
   name: String!
-  doctors: [Doctor]!
+  doctor: Doctor
   createdAt: String!
 }

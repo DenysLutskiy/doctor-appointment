@@ -1,5 +1,5 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { IsDefined, IsString, IsArray, IsOptional } from 'class-validator';
+import { IsDefined, IsString, IsOptional } from 'class-validator';
 
 @InputType()
 export class CreateRoomInput {
@@ -12,5 +12,5 @@ export class CreateRoomInput {
   @IsOptional()
   @IsDefined()
   @IsString()
-  doctorIds: string[];
+  doctorId: string;
 }

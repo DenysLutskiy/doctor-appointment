@@ -7,6 +7,7 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -33,7 +34,7 @@ export class Doctor {
   @Column()
   level: string;
 
-  @ManyToOne(() => Room, (room) => room.doctors)
+  @OneToMany(() => Room, (room) => room.doctor)
   rooms: Room;
 
   @CreateDateColumn()

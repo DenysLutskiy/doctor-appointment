@@ -1,14 +1,10 @@
 import { Doctor } from 'src/doctors/entities/doctor.entity';
-import { Specialization } from 'src/specializations/entities/specialization.entity';
-import { User } from 'src/users/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
-  OneToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -17,12 +13,15 @@ export class Room {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({ unique: true })
   name: string;
 
-  @OneToMany(() => Doctor, (doctor) => doctor.rooms)
-  @Column('character varying', { array: true })
-  doctors: Doctor[];
+  @ManyToOne(() => Doctor, (doctor) => doctor.rooms)
+  @JoinColumn({ name: 'doctorId' })
+  doctor: Doctor;
+
+  @Column({ nullable: true })
+  doctorId: string;
 
   @CreateDateColumn()
   createdAt: string;

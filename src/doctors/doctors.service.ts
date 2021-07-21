@@ -40,11 +40,9 @@ export class DoctorsService {
     }
   }
 
-  async findByIds(ids: any) {
+  async findById(id: string): Promise<Doctor> {
     try {
-      return await this.doctorsRepository.findByIds(ids, {
-        relations: ['user', 'specialization'],
-      });
+      return await this.doctorsRepository.findOne(id);
     } catch (err) {
       throw new HttpException(err, HttpStatus.BAD_REQUEST);
     }

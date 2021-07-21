@@ -11,11 +11,14 @@ export class RoomsService {
     private roomsRepository: Repository<Room>,
   ) {}
 
-  async create(createRoomInput: CreateRoomInput) {
-    return await this.roomsRepository.save(createRoomInput);
+  async create(createRoomInput: CreateRoomInput): Promise<Room> {
+    return await this.roomsRepository.save({
+      name: createRoomInput.name,
+      doctorId: createRoomInput.doctorId,
+    });
   }
 
-  findAll() {
+  findAll(): Promise<Room[]> {
     return this.roomsRepository.find();
   }
 }
