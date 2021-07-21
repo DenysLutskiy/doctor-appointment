@@ -32,7 +32,7 @@ export class UsersService {
     }
   }
 
-  async edit(userId: string, editUserInput: EditUserInput) {
+  async edit(userId: string, editUserInput: EditUserInput): Promise<User> {
     try {
       if (editUserInput.password) {
         editUserInput.password = await bcrypt.hash(editUserInput.password, 12);
@@ -44,7 +44,7 @@ export class UsersService {
     }
   }
 
-  async delete(userId: string) {
+  async delete(userId: string): Promise<boolean> {
     try {
       const user = await this.usersRepository.findOne(userId);
       let admins = [];
@@ -69,7 +69,7 @@ export class UsersService {
     }
   }
 
-  findAll() {
+  findAll(): Promise<User[]> {
     return this.usersRepository.find();
   }
 

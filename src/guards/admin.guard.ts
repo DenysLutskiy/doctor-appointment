@@ -14,7 +14,7 @@ import { Roles } from 'src/types/enums/user-roles.enum';
 export class AdminGuard implements CanActivate {
   constructor(private readonly authService: AuthService) {}
 
-  async canActivate(context: ExecutionContext) {
+  async canActivate(context: ExecutionContext): Promise<boolean> {
     const ctx = GqlExecutionContext.create(context).getContext();
     if (!ctx.req.headers.autorization) {
       return false;

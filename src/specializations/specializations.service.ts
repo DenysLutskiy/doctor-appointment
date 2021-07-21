@@ -11,7 +11,9 @@ export class SpecializationsService {
     private specializationRepository: Repository<Specialization>,
   ) {}
 
-  create(createSpecializationInput: CreateSpecializationInput) {
+  create(
+    createSpecializationInput: CreateSpecializationInput,
+  ): Promise<Specialization> {
     return this.specializationRepository.save(createSpecializationInput);
   }
 
