@@ -1,0 +1,34 @@
+# ---------------------------------- Querys ---------------------------------- #
+type Query {
+  hospitals: [Hospital]!
+}
+
+# --------------------------------- Mutations -------------------------------- #
+type Mutation {
+  createHospital(createHospitalInput: CreateHospitalInput!): Hospital!
+  editHospital(id: ID!, editHospitalInput: EditHospitalInput!): Hospital!
+  deletePhoneNumber(id: ID!, phoneNumbers: [String!]!): Hospital!
+  deleteHospital(id: ID!): Boolean!
+}
+
+# -------------------------------- Input types ------------------------------- #
+input CreateHospitalInput {
+  name: String!
+  address: String!
+  phoneNumbers: [String!]!
+}
+
+input EditHospitalInput {
+  name: String
+  address: String
+  phoneNumbers: [String!]
+}
+
+# --------------------------------- Entities --------------------------------- #
+type Hospital {
+  id: ID!
+  name: String!
+  address: String!
+  phoneNumbers: [String!]!
+  createdAt: String!
+}

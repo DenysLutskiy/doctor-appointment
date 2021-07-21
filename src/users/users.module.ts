@@ -12,6 +12,5 @@ import { AuthService } from 'src/auth/auth.service';
     TypeOrmModule.forFeature([User]),
   ],
   providers: [UsersResolver, UsersService, AuthService],
-  exports: [TypeOrmModule],
 })
 export class UsersModule {}
