@@ -1,0 +1,18 @@
+# --------------------------------- Mutations -------------------------------- #
+type Mutation {
+  createSpecialization(
+    createSpecializationInput: CreateSpecializationInput!
+  ): Specialization!
+}
+
+# -------------------------------- Input types ------------------------------- #
+input CreateSpecializationInput {
+  name: String!
+}
+
+# --------------------------------- Entities --------------------------------- #
+type Specialization {
+  id: ID!
+  name: String!
+  createdAt: String!
+}
