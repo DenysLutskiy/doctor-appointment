@@ -8,6 +8,7 @@ import { Doctor } from './entities/doctor.entity';
 import { UsersService } from 'src/users/users.service';
 import { SpecializationsService } from 'src/specializations/specializations.service';
 import { AuthService } from 'src/auth/auth.service';
+import * as REDIS_CONFIG from 'src/config/redis';
 
 @Module({
   imports: [
@@ -23,12 +24,3 @@ import { AuthService } from 'src/auth/auth.service';
   ],
 })
 export class DoctorsModule {}
-function REDIS_CONFIG(
-  REDIS_CONFIG: any,
-):
-  | import('@nestjs/common').Type<any>
-  | import('@nestjs/common').DynamicModule
-  | Promise<import('@nestjs/common').DynamicModule>
-  | import('@nestjs/common').ForwardReference<any> {
-  throw new Error('Function not implemented.');
-}

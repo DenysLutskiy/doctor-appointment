@@ -8,7 +8,9 @@ import {
   Parent,
 } from '@nestjs/graphql';
 import { AdminGuard } from 'src/guards/admin.guard';
+import { Specialization } from 'src/specializations/entities/specialization.entity';
 import { SpecializationsService } from 'src/specializations/specializations.service';
+import { User } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
 import { DoctorsService } from './doctors.service';
 import { CreateDoctorInput } from './dto/create-doctor.input';
@@ -24,22 +26,24 @@ export class DoctorsResolver {
 
   @Mutation('createDoctor')
   @UseGuards(AdminGuard)
-  create(@Args('createDoctorInput') createDoctorInput: CreateDoctorInput) {
+  create(
+    @Args('createDoctorInput') createDoctorInput: CreateDoctorInput,
+  ): Promise<Doctor> {
     return this.doctorsService.create(createDoctorInput);
   }
 
   @Query('doctors')
-  findAll() {
+  findAll(): Promise<Doctor[]> {
     return this.doctorsService.findAll();
   }
 
   @ResolveField('user')
-  async getUser(@Parent() doctor: Doctor) {
-    return await this.usersService.findOne(doctor.user.id);
+  async getUser(@Parent() doctor: Doctor): Promise<User> {
+    return await this.usersService.findOne(doctor.userId);
   }
 
   @ResolveField('specialization')
-  async getSpecialization(@Parent() doctor: Doctor) {
-    return await this.specializationsService.findOne(doctor.specialization.id);
+  async getSpecialization(@Parent() doctor: Doctor): Promise<Specialization> {
+    return await this.specializationsService.findOne(doctor.specializationId);
   }
 }

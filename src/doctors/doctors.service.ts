@@ -16,20 +16,14 @@ export class DoctorsService {
     @InjectRepository(Specialization)
     private specializationsRepository: Repository<Specialization>,
   ) {}
-  async create(createDoctorInput: CreateDoctorInput) {
+  async create(createDoctorInput: CreateDoctorInput): Promise<Doctor> {
     const doctor = await this.doctorsRepository.create(createDoctorInput);
-    console.log(doctor);
-
-    const spec = await this.specializationsRepository.findOne({
+    doctor.specialization = await this.specializationsRepository.findOne({
       id: createDoctorInput.specializationId,
     });
-    const user = await this.usersRepository.findOne({
+    doctor.user = await this.usersRepository.findOne({
       id: createDoctorInput.userId,
     });
-    console.log(spec);
-
-    doctor.specialization = spec;
-    doctor.user = user;
 
     try {
       return await this.doctorsRepository.save(doctor);
@@ -38,11 +32,9 @@ export class DoctorsService {
     }
   }
 
-  async findAll() {
+  async findAll(): Promise<Doctor[]> {
     try {
-      return await this.doctorsRepository.find({
-        relations: ['user', 'specialization'],
-      });
+      return await this.doctorsRepository.find();
     } catch (err) {
       throw new HttpException(err, HttpStatus.BAD_REQUEST);
     }

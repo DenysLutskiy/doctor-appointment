@@ -17,7 +17,7 @@ export class SpecializationsService {
     return this.specializationRepository.save(createSpecializationInput);
   }
 
-  async findOne(id: string) {
+  async findOne(id: string): Promise<Specialization> {
     const specialization = await this.specializationRepository.findOne(id);
     return specialization;
   }

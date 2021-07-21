@@ -12,13 +12,7 @@ type Mutation {
 input CreateDoctorInput {
   userId: String!
   specializationId: String!
-  level: String!
-}
-
-input EditDoctorInput {
-  userId: String!
-  specializationId: String!
-  level: String!
+  level: Levels!
 }
 
 # --------------------------------- Entities --------------------------------- #
@@ -28,4 +22,11 @@ type Doctor {
   specialization: Specialization!
   level: String!
   createdAt: String!
+}
+
+# ----------------------------------- Enums ---------------------------------- #
+enum Levels {
+  JUNIOR
+  MIDDLE
+  SENIOR
 }
