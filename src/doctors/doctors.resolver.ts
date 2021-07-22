@@ -39,11 +39,13 @@ export class DoctorsResolver {
 
   @ResolveField('user')
   async getUser(@Parent() doctor: Doctor): Promise<User> {
-    return await this.usersService.findOne(doctor.userId);
+    return await this.usersService.findOneById(doctor.userId);
   }
 
   @ResolveField('specialization')
   async getSpecialization(@Parent() doctor: Doctor): Promise<Specialization> {
-    return await this.specializationsService.findOne(doctor.specializationId);
+    return await this.specializationsService.findOneById(
+      doctor.specializationId,
+    );
   }
 }

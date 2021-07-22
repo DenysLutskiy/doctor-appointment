@@ -1,12 +1,12 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import * as bcrypt from 'bcrypt';
 import { v1 as uuid } from 'uuid';
+import * as bcrypt from 'bcrypt';
 
 import { CreateUserInput } from './dto/create-user.input';
-import { User } from './entities/user.entity';
 import { EditUserInput } from './dto/edit-user.input';
+import { User } from './entities/user.entity';
 import { Roles } from 'src/types/enums/user-roles.enum';
 
 @Injectable()
@@ -22,11 +22,10 @@ export class UsersService {
         createUserInput.login = createUserInput.firstName + uuid();
       }
       const hash = await bcrypt.hash(createUserInput.password, 12);
-      const createdUser = await this.usersRepository.save({
+      return await this.usersRepository.save({
         ...createUserInput,
         password: hash,
       });
-      return createdUser;
     } catch (err) {
       throw new HttpException(err, HttpStatus.BAD_REQUEST);
     }
@@ -69,12 +68,11 @@ export class UsersService {
     }
   }
 
-  findAll(): Promise<User[]> {
-    return this.usersRepository.find();
+  async findAll(): Promise<User[]> {
+    return await this.usersRepository.find();
   }
 
-  async findOne(id: string): Promise<User> {
-    const user = await this.usersRepository.findOne(id);
-    return user;
+  async findOneById(id: string): Promise<User> {
+    return await this.usersRepository.findOne(id);
   }
 }
