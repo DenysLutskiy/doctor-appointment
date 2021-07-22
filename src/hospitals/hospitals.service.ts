@@ -85,7 +85,7 @@ export class HospitalsService {
     }
   }
 
-  findOne(id: string): Promise<Hospital> {
+  findOneById(id: string): Promise<Hospital> {
     try {
       return this.hospitalsRepository.findOne(id);
     } catch (err) {

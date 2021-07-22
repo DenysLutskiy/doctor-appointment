@@ -1,17 +1,21 @@
 import { CacheModule, Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+
 import { HospitalsService } from './hospitals.service';
 import { HospitalsResolver } from './hospitals.resolver';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { Hospital } from './entities/hospital.entity';
-import { AuthService } from 'src/auth/auth.service';
-import { User } from 'src/users/entities/user.entity';
+import { UsersModule } from 'src/users/users.module';
+import { AuthModule } from 'src/auth/auth.module';
 import * as REDIS_CONFIG from 'src/config/redis';
 
 @Module({
   imports: [
+    UsersModule,
+    AuthModule,
     CacheModule.register(REDIS_CONFIG),
-    TypeOrmModule.forFeature([Hospital, User]),
+    TypeOrmModule.forFeature([Hospital]),
   ],
-  providers: [HospitalsResolver, HospitalsService, AuthService],
+  providers: [HospitalsResolver, HospitalsService],
+  exports: [HospitalsService, TypeOrmModule],
 })
 export class HospitalsModule {}
