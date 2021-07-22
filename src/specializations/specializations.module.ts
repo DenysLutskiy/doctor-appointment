@@ -7,5 +7,6 @@ import { Specialization } from './entities/specialization.entity';
 @Module({
   imports: [TypeOrmModule.forFeature([Specialization])],
   providers: [SpecializationsResolver, SpecializationsService],
+  exports: [SpecializationsService, TypeOrmModule],
 })
 export class SpecializationsModule {}

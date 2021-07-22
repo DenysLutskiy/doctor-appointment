@@ -1,7 +1,9 @@
+import { Doctor } from 'src/doctors/entities/doctor.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -12,6 +14,9 @@ export class Specialization {
 
   @Column()
   name: string;
+
+  @OneToMany(() => Doctor, (doctor) => doctor.specialization)
+  doctors: Doctor[];
 
   @CreateDateColumn()
   createdAt: string;
