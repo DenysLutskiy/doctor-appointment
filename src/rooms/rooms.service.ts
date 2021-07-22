@@ -13,10 +13,7 @@ export class RoomsService {
 
   async create(createRoomInput: CreateRoomInput): Promise<Room> {
     try {
-      return await this.roomsRepository.save({
-        name: createRoomInput.name,
-        doctorId: createRoomInput.doctorId,
-      });
+      return await this.roomsRepository.save(createRoomInput);
     } catch (err) {
       throw new HttpException(err, HttpStatus.BAD_REQUEST);
     }
