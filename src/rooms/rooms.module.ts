@@ -4,18 +4,22 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { RoomsService } from './rooms.service';
 import { RoomsResolver } from './rooms.resolver';
 import { Room } from './entities/room.entity';
-import { AuthService } from 'src/auth/auth.service';
+import { UsersModule } from 'src/users/users.module';
+import { DoctorsModule } from 'src/doctors/doctors.module';
+import { SpecializationsModule } from 'src/specializations/specializations.module';
+import { AuthModule } from 'src/auth/auth.module';
 import * as REDIS_CONFIG from 'src/config/redis';
-import { User } from 'src/users/entities/user.entity';
-import { DoctorsService } from 'src/doctors/doctors.service';
-import { Doctor } from 'src/doctors/entities/doctor.entity';
-import { Specialization } from 'src/specializations/entities/specialization.entity';
 
 @Module({
   imports: [
+    AuthModule,
+    UsersModule,
+    DoctorsModule,
+    SpecializationsModule,
     CacheModule.register(REDIS_CONFIG),
-    TypeOrmModule.forFeature([Room, User, Doctor, Specialization]),
+    TypeOrmModule.forFeature([Room]),
   ],
-  providers: [RoomsResolver, RoomsService, AuthService, DoctorsService],
+  providers: [RoomsResolver, RoomsService],
+  exports: [RoomsService, TypeOrmModule],
 })
 export class RoomsModule {}
