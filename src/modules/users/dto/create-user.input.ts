@@ -1,6 +1,5 @@
 import { Field, InputType } from '@nestjs/graphql';
 import {
-  IsDefined,
   IsString,
   Length,
   IsEmail,
@@ -26,7 +25,6 @@ export class CreateUserInput {
   mobilePhone: string;
 
   @Field()
-  @IsDefined()
   @IsEmail()
   email: string;
 
