@@ -40,7 +40,7 @@ export class DoctorsService {
     }
   }
 
-  async findById(id: string): Promise<Doctor> {
+  async findOneById(id: string): Promise<Doctor> {
     try {
       return await this.doctorsRepository.findOne(id);
     } catch (err) {

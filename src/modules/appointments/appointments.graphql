@@ -1,0 +1,34 @@
+# ---------------------------------- Querys ---------------------------------- #
+type Query {
+  appointments: [Appointment]!
+}
+
+# --------------------------------- Mutations -------------------------------- #
+type Mutation {
+  createAppointment(
+    createAppointmentInput: CreateAppointmentInput!
+  ): Appointment!
+}
+
+# -------------------------------- Input types ------------------------------- #
+input CreateAppointmentInput {
+  doctorId: String!
+  patientId: String!
+  roomId: String!
+  scheduleDateAndTime: Date!
+  duration: Int!
+}
+
+# --------------------------------- Entities --------------------------------- #
+type Appointment {
+  id: ID!
+  doctor: Doctor!
+  patient: Patient!
+  room: Room!
+  scheduleDateAndTime: Date!
+  duration: Int!
+  createdAt: String!
+}
+
+# ---------------------------------- Scalars --------------------------------- #
+scalar Date

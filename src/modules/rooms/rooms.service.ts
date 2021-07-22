@@ -26,4 +26,12 @@ export class RoomsService {
       throw new HttpException(err, HttpStatus.BAD_REQUEST);
     }
   }
+
+  async findOneById(id: string): Promise<Room> {
+    try {
+      return await this.roomsRepository.findOne(id);
+    } catch (err) {
+      throw new HttpException(err, HttpStatus.BAD_REQUEST);
+    }
+  }
 }
