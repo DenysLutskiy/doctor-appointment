@@ -4,7 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersService } from './users.service';
 import { UsersResolver } from './users.resolver';
 import { User } from './entities/user.entity';
-import { AuthService } from 'src/auth/auth.service';
+import { AuthService } from 'src/modules/auth/auth.service';
 import * as REDIS_CONFIG from 'src/config/redis';
 
 @Module({

@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 
-import { AuthService } from 'src/auth/auth.service';
+import { AuthService } from 'src/modules/auth/auth.service';
 import { Roles } from 'src/types/enums/user-roles.enum';
 
 @Injectable()

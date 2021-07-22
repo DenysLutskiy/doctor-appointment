@@ -1,6 +1,6 @@
-import { Room } from 'src/rooms/entities/room.entity';
-import { Specialization } from 'src/specializations/entities/specialization.entity';
-import { User } from 'src/users/entities/user.entity';
+import { Room } from 'src/modules/rooms/entities/room.entity';
+import { Specialization } from 'src/modules/specializations/entities/specialization.entity';
+import { User } from 'src/modules/users/entities/user.entity';
 import {
   Column,
   CreateDateColumn,

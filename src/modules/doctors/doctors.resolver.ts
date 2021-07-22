@@ -8,10 +8,10 @@ import {
   Parent,
 } from '@nestjs/graphql';
 import { AdminGuard } from 'src/guards/admin.guard';
-import { Specialization } from 'src/specializations/entities/specialization.entity';
-import { SpecializationsService } from 'src/specializations/specializations.service';
-import { User } from 'src/users/entities/user.entity';
-import { UsersService } from 'src/users/users.service';
+import { Specialization } from 'src/modules/specializations/entities/specialization.entity';
+import { SpecializationsService } from 'src/modules/specializations/specializations.service';
+import { User } from 'src/modules/users/entities/user.entity';
+import { UsersService } from 'src/modules/users/users.service';
 import { DoctorsService } from './doctors.service';
 import { CreateDoctorInput } from './dto/create-doctor.input';
 import { Doctor } from './entities/doctor.entity';

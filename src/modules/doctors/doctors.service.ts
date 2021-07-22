@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Specialization } from 'src/specializations/entities/specialization.entity';
-import { User } from 'src/users/entities/user.entity';
+import { Specialization } from 'src/modules/specializations/entities/specialization.entity';
+import { User } from 'src/modules/users/entities/user.entity';
 import { Repository } from 'typeorm';
 import { CreateDoctorInput } from './dto/create-doctor.input';
 import { Doctor } from './entities/doctor.entity';

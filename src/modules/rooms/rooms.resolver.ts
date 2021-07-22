@@ -10,9 +10,9 @@ import { RoomsService } from './rooms.service';
 import { CreateRoomInput } from './dto/create-room.input';
 import { UseGuards } from '@nestjs/common';
 import { AdminGuard } from 'src/guards/admin.guard';
-import { DoctorsService } from 'src/doctors/doctors.service';
+import { DoctorsService } from 'src/modules/doctors/doctors.service';
 import { Room } from './entities/room.entity';
-import { Doctor } from 'src/doctors/entities/doctor.entity';
+import { Doctor } from 'src/modules/doctors/entities/doctor.entity';
 
 @Resolver('Room')
 export class RoomsResolver {
