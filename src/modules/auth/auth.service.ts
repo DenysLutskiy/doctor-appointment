@@ -12,7 +12,7 @@ import * as jwt from 'jsonwebtoken';
 import { Cache } from 'cache-manager';
 
 import { signInResponseType } from 'src/types/interfaces/signin-response.interface';
-import { User } from 'src/users/entities/user.entity';
+import { User } from 'src/modules/users/entities/user.entity';
 import { SigninUserInput } from './dto/signin-user.input';
 import { JWTPayloadType } from 'src/types/interfaces/payload.interface';
 

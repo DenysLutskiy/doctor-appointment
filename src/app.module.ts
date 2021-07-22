@@ -3,11 +3,12 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { getConnectionOptions } from 'typeorm';
 
-import { UsersModule } from './users/users.module';
-import { AuthModule } from './auth/auth.module';
-import { HospitalsModule } from './hospitals/hospitals.module';
-import { SpecializationsModule } from './specializations/specializations.module';
-import { DoctorsModule } from './doctors/doctors.module';
+import { UsersModule } from 'src/modules/users/users.module';
+import { AuthModule } from 'src/modules/auth/auth.module';
+import { HospitalsModule } from 'src/modules/hospitals/hospitals.module';
+import { SpecializationsModule } from 'src/modules/specializations/specializations.module';
+import { DoctorsModule } from 'src/modules/doctors/doctors.module';
+import { RoomsModule } from 'src/modules/rooms/rooms.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { DoctorsModule } from './doctors/doctors.module';
     HospitalsModule,
     SpecializationsModule,
     DoctorsModule,
+    RoomsModule,
   ],
 })
 export class AppModule {}

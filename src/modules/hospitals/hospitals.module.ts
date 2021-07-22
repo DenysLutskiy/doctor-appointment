@@ -4,8 +4,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { HospitalsService } from './hospitals.service';
 import { HospitalsResolver } from './hospitals.resolver';
 import { Hospital } from './entities/hospital.entity';
-import { UsersModule } from 'src/users/users.module';
-import { AuthModule } from 'src/auth/auth.module';
+import { UsersModule } from 'src/modules/users/users.module';
+import { AuthModule } from 'src/modules/auth/auth.module';
 import * as REDIS_CONFIG from 'src/config/redis';
 
 @Module({

@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Specialization } from 'src/specializations/entities/specialization.entity';
-import { User } from 'src/users/entities/user.entity';
+import { Specialization } from 'src/modules/specializations/entities/specialization.entity';
+import { User } from 'src/modules/users/entities/user.entity';
 import { Repository } from 'typeorm';
 import { CreateDoctorInput } from './dto/create-doctor.input';
 import { Doctor } from './entities/doctor.entity';
@@ -35,6 +35,14 @@ export class DoctorsService {
   async findAll(): Promise<Doctor[]> {
     try {
       return await this.doctorsRepository.find();
+    } catch (err) {
+      throw new HttpException(err, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async findById(id: string): Promise<Doctor> {
+    try {
+      return await this.doctorsRepository.findOne(id);
     } catch (err) {
       throw new HttpException(err, HttpStatus.BAD_REQUEST);
     }

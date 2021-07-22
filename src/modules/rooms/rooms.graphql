@@ -1,0 +1,23 @@
+# ---------------------------------- Querys ---------------------------------- #
+type Query {
+  rooms: [Room]!
+}
+
+# --------------------------------- Mutations -------------------------------- #
+type Mutation {
+  createRoom(createRoomInput: CreateRoomInput!): Room!
+}
+
+# -------------------------------- Input types ------------------------------- #
+input CreateRoomInput {
+  name: String!
+  doctorId: String
+}
+
+# --------------------------------- Entities --------------------------------- #
+type Room {
+  id: ID!
+  name: String!
+  doctor: Doctor
+  createdAt: String!
+}
