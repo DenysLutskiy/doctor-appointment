@@ -7,6 +7,7 @@ import {
   Entity,
   JoinColumn,
   ManyToMany,
+  ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -15,14 +16,14 @@ export class Appointment {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToMany(() => Patient)
+  @ManyToOne(() => Patient)
   @JoinColumn({ name: 'patientId' })
   patient: Patient;
 
   @Column()
   patientId: string;
 
-  @ManyToMany(() => Doctor)
+  @ManyToOne(() => Doctor, (doctor) => doctor.rooms)
   @JoinColumn({ name: 'doctorId' })
   doctor: Doctor;
 

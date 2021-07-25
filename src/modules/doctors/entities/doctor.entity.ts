@@ -1,3 +1,4 @@
+import { Appointment } from 'src/modules/appointments/entities/appointment.entity';
 import { Room } from 'src/modules/rooms/entities/room.entity';
 import { Specialization } from 'src/modules/specializations/entities/specialization.entity';
 import { User } from 'src/modules/users/entities/user.entity';
@@ -31,11 +32,14 @@ export class Doctor {
   @Column()
   specializationId: string;
 
-  @Column()
-  level: string;
-
   @OneToMany(() => Room, (room) => room.doctor)
   rooms: Room;
+
+  @OneToMany(() => Appointment, (appointment) => appointment.doctor)
+  appointments: Appointment;
+
+  @Column()
+  level: string;
 
   @CreateDateColumn()
   createdAt: string;
