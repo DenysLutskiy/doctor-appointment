@@ -11,6 +11,8 @@ type Mutation {
     userId: String
     createUserInput: CreateUserInput
   ): Patient!
+
+  editPatient(patientId: ID!, editPatientInput: EditPatientInput!): Patient!
 }
 
 # -------------------------------- Input types ------------------------------- #
@@ -20,6 +22,14 @@ input CreatePatientInput {
   bornCity: String!
   bornCountry: String!
   address: String!
+}
+
+input EditPatientInput {
+  gender: String
+  age: Int
+  bornCity: String
+  bornCountry: String
+  address: String
 }
 
 # --------------------------------- Entities --------------------------------- #
