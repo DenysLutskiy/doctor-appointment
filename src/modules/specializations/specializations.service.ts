@@ -1,7 +1,9 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+
 import { CreateSpecializationInput } from './dto/create-specialization.input';
+import { EditSpecializationInput } from './dto/edit-specialization.input';
 import { Specialization } from './entities/specialization.entity';
 
 @Injectable()
@@ -16,6 +18,18 @@ export class SpecializationsService {
   ): Promise<Specialization> {
     try {
       return this.specializationRepository.save(createSpecializationInput);
+    } catch (err) {
+      throw new HttpException(err, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  edit(
+    id: string,
+    editSpecializationInput: EditSpecializationInput,
+  ): Promise<Specialization> {
+    try {
+      this.specializationRepository.update(id, editSpecializationInput);
+      return this.findOneById(id);
     } catch (err) {
       throw new HttpException(err, HttpStatus.BAD_REQUEST);
     }
