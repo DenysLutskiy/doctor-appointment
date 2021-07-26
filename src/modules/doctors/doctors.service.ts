@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { SpecializationsService } from '../specializations/specializations.service';
 import { UsersService } from '../users/users.service';
 import { CreateDoctorInput } from './dto/create-doctor.input';
+import { EditDoctorInput } from './dto/edit-doctor.input';
 import { Doctor } from './entities/doctor.entity';
 
 @Injectable()
@@ -35,6 +36,15 @@ export class DoctorsService {
     try {
       await this.doctorsRepository.delete(doctorId);
       return true;
+    } catch (err) {
+      throw new HttpException(err, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async edit(id: string, editDoctorInput: EditDoctorInput): Promise<Doctor> {
+    try {
+      await this.doctorsRepository.update(id, editDoctorInput);
+      return this.findOneById(id);
     } catch (err) {
       throw new HttpException(err, HttpStatus.BAD_REQUEST);
     }
