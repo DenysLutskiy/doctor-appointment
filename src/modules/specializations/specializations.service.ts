@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOneOptions, Repository } from 'typeorm';
+import { FindOneOptions, ILike, Repository } from 'typeorm';
 
 import { CreateSpecializationInput } from './dto/create-specialization.input';
 import { EditSpecializationInput } from './dto/edit-specialization.input';
@@ -62,6 +62,20 @@ export class SpecializationsService {
         return await this.specializationRepository.findOne(id, options);
       }
       return await this.specializationRepository.findOne(id);
+    } catch (err) {
+      throw new HttpException(err, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  findAll(filter: undefined | string): Promise<Specialization[]> {
+    try {
+      if (filter) {
+        const text = ILike(`%${filter}%`);
+        return this.specializationRepository.find({
+          where: [{ name: text }],
+        });
+      }
+      return this.specializationRepository.find();
     } catch (err) {
       throw new HttpException(err, HttpStatus.BAD_REQUEST);
     }

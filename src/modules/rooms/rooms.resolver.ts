@@ -35,7 +35,7 @@ export class RoomsResolver {
   }
 
   @ResolveField('doctor')
-  async getUser(@Parent() room: Room): Promise<Doctor> {
+  async getDoctor(@Parent() room: Room): Promise<Doctor> {
     return await this.doctorsService.findOneById(room.doctorId);
   }
 }
