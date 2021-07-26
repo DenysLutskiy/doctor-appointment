@@ -34,4 +34,12 @@ export class SpecializationsResolver {
       editSpecializationInput,
     );
   }
+
+  @Mutation('deleteSpecialization')
+  delete(
+    @Args('specializationId')
+    specializationId: string,
+  ): Promise<boolean> {
+    return this.specializationsService.delete(specializationId);
+  }
 }

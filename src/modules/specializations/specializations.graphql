@@ -12,6 +12,10 @@ type Mutation {
   ): Specialization!
 }
 
+type Mutation {
+  deleteSpecialization(specializationId: ID!): Boolean!
+}
+
 # -------------------------------- Input types ------------------------------- #
 input CreateSpecializationInput {
   name: String!
