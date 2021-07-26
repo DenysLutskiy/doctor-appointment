@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserInput } from '../users/dto/create-user.input';
+import { EditUserInput } from '../users/dto/edit-user.input';
 import { UsersService } from '../users/users.service';
 import { CreatePatientInput } from './dto/create-patient.input';
 import { EditPatientInput } from './dto/edit-patient.input';
@@ -32,17 +33,29 @@ export class PatientsService {
         HttpStatus.BAD_REQUEST,
       );
     }
+
     try {
-      const patien = this.patientsRepository.create(createPatientInput);
+      const patient = this.patientsRepository.create(createPatientInput);
       if (userId && !createUserInput) {
-        patien.userId = userId;
+        patient.userId = userId;
       }
       if (createUserInput && !userId) {
         const user = await this.usersService.create(createUserInput);
-        patien.userId = user.id;
+        patient.userId = user.id;
       }
 
-      return await this.patientsRepository.save(patien);
+      const savedPatient = await this.patientsRepository.save(patient);
+      if (!savedPatient) {
+        throw new HttpException(
+          "Patient wasn't creaed",
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+      if (savedPatient && patient.userId) {
+        const user: EditUserInput = { role: 'patient' };
+        await this.usersService.edit(patient.userId, user);
+      }
+      return patient;
     } catch (err) {
       throw new HttpException(err, HttpStatus.BAD_REQUEST);
     }

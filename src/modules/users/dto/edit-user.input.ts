@@ -14,34 +14,34 @@ export class EditUserInput {
   @IsString()
   @MinLength(2)
   @IsOptional()
-  firstName: string;
+  firstName?: string;
 
   @Field()
   @IsString()
   @MinLength(2)
   @IsOptional()
-  lastName: string;
+  lastName?: string;
 
   @Field()
   @IsString()
   @Length(10, 15)
   @IsOptional()
-  mobilePhone: string;
+  mobilePhone?: string;
 
   @Field()
   @IsEmail()
   @IsDefined()
   @IsOptional()
-  email: string;
+  email?: string;
 
   @Field()
   @IsString()
   @Length(6, 48)
   @IsOptional()
-  password: string;
+  password?: string;
 
   @Field()
   @IsString()
   @IsOptional()
-  role: string;
+  role?: string;
 }
