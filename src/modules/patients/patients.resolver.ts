@@ -46,6 +46,11 @@ export class PatientsResolver {
     return this.patientsService.edit(patientId, editPatientInput);
   }
 
+  @Mutation('deletePatient')
+  delete(@Args('patientId') patientId: string): Promise<boolean> {
+    return this.patientsService.delete(patientId);
+  }
+
   @Query('patients')
   findAll(): Promise<Patient[]> {
     return this.patientsService.findAll();

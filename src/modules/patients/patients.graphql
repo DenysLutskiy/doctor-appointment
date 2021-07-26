@@ -13,6 +13,7 @@ type Mutation {
   ): Patient!
 
   editPatient(patientId: ID!, editPatientInput: EditPatientInput!): Patient!
+  deletePatient(patientId: ID!): Boolean!
 }
 
 # -------------------------------- Input types ------------------------------- #

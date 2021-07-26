@@ -79,6 +79,26 @@ export class PatientsService {
     }
   }
 
+  async delete(patientId: string): Promise<boolean> {
+    try {
+      const patinent = await this.patientsRepository.findOne(patientId);
+      const deletedUser = await this.patientsRepository.delete(patientId);
+      if (!deletedUser) {
+        throw new HttpException(
+          "User wasn't creaed deleted",
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+      if (deletedUser && patientId) {
+        const user: EditUserInput = { role: 'guest' };
+        await this.usersService.edit(patinent.userId, user);
+      }
+      return true;
+    } catch (err) {
+      throw new HttpException(err, HttpStatus.BAD_REQUEST);
+    }
+  }
+
   findAll(): Promise<Patient[]> {
     try {
       return this.patientsRepository.find();
