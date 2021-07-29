@@ -13,6 +13,8 @@ import { RoomsModule } from 'src/modules/rooms/rooms.module';
 import { PatientsModule } from './modules/patients/patients.module';
 import { ApolloError } from 'apollo-server-express';
 import { HttpExceptionFilter } from './utils/http-exception.filter';
+import { APP_GUARD } from '@nestjs/core';
+import { RolesGuard } from './guards/roles.guard';
 
 @Module({
   imports: [
@@ -54,6 +56,12 @@ import { HttpExceptionFilter } from './utils/http-exception.filter';
     DoctorsModule,
     RoomsModule,
     PatientsModule,
+  ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
   ],
 })
 export class AppModule {}

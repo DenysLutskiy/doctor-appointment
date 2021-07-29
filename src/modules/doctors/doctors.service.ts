@@ -21,6 +21,7 @@ export class DoctorsService {
     if (!doctor) {
       throw new HttpException(`Doctor wasn't created`, HttpStatus.BAD_REQUEST);
     }
+
     doctor.specialization = await this.specializationsRepository.findOne({
       id: createDoctorInput.specializationId,
     });
@@ -28,11 +29,14 @@ export class DoctorsService {
       id: createDoctorInput.userId,
     });
 
-    try {
-      return await this.doctorsRepository.save(doctor);
-    } catch (err) {
-      throw new HttpException(err, HttpStatus.BAD_REQUEST);
+    if (!doctor.user) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
+    if (!doctor.specialization) {
+      throw new HttpException('Specialization not found', HttpStatus.NOT_FOUND);
+    }
+
+    return await this.doctorsRepository.save(doctor);
   }
 
   async findAll(): Promise<Doctor[]> {
