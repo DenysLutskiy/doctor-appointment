@@ -60,10 +60,8 @@ export class SpecializationsResolver {
 
   @ResolveField('doctors')
   async getDoctor(@Parent() specialization: Specialization): Promise<Doctor[]> {
-    return (
-      await this.specializationsService.findOneById(specialization.id, {
-        relations: ['doctors'],
-      })
-    ).doctors;
+    return await this.doctorsService.findManyWithOptions({
+      where: { specializationId: specialization.id },
+    });
   }
 }
