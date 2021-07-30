@@ -1,18 +1,18 @@
 import { Resolver, Query, Mutation, Args, Context } from '@nestjs/graphql';
+
 import { UsersService } from './users.service';
 import { CreateUserInput } from './dto/create-user.input';
-import { UseGuards } from '@nestjs/common';
-import { UserGuard } from 'src/guards/user.guard';
 import { User } from './entities/user.entity';
 import { EditUserInput } from './dto/edit-user.input';
-import { AdminGuard } from 'src/guards/admin.guard';
+import { CanPass } from 'src/utils/canpass.decorator';
+import { Roles } from 'src/types/enums/user-roles.enum';
 
 @Resolver('User')
 export class UsersResolver {
   constructor(private readonly usersService: UsersService) {}
 
   @Mutation('createUser')
-  @UseGuards(AdminGuard)
+  @CanPass(Roles.ADMIN)
   create(
     @Args('createUserInput') createUserInput: CreateUserInput,
   ): Promise<User> {
@@ -20,7 +20,7 @@ export class UsersResolver {
   }
 
   @Mutation('editUser')
-  @UseGuards(AdminGuard)
+  @CanPass(Roles.ADMIN)
   edit(
     @Args('id') userId: string,
     @Args('editUserInput') editUserInput: EditUserInput,
@@ -29,13 +29,13 @@ export class UsersResolver {
   }
 
   @Mutation('deleteUser')
-  @UseGuards(AdminGuard)
+  @CanPass(Roles.ADMIN)
   delete(@Args('id') userId: string): Promise<boolean> {
     return this.usersService.delete(userId);
   }
 
   @Query('getMe')
-  @UseGuards(UserGuard)
+  @CanPass(...Object.values(Roles))
   me(@Context('user') user: User): User {
     return user;
   }
