@@ -15,7 +15,7 @@ input CreateAppointmentInput {
   doctorId: String!
   patientId: String!
   roomId: String!
-  scheduleDateAndTime: Date!
+  appointmentStart: Date!
   duration: Int!
 }
 
@@ -25,7 +25,8 @@ type Appointment {
   doctor: Doctor!
   patient: Patient!
   room: Room!
-  scheduleDateAndTime: Date!
+  appointmentStart: Date!
+  appointmentEnd: Date!
   duration: Int!
   createdAt: String!
 }
