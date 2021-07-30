@@ -1,6 +1,12 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+<<<<<<< HEAD
+import { FindManyOptions, Repository } from 'typeorm';
+=======
 import { Repository } from 'typeorm';
+import { AppointmentsService } from '../appointments/appointments.service';
+import { RoomsService } from '../rooms/rooms.service';
+>>>>>>> feature/ft-55/ability_to_remove_an_existing_specialization
 
 import { SpecializationsService } from '../specializations/specializations.service';
 import { UsersService } from '../users/users.service';
@@ -15,6 +21,8 @@ export class DoctorsService {
     private doctorsRepository: Repository<Doctor>,
     private readonly usersService: UsersService,
     private readonly specializationsService: SpecializationsService,
+    private readonly appointmentsService: AppointmentsService,
+    private readonly roomsService: RoomsService,
   ) {}
   async create(createDoctorInput: CreateDoctorInput): Promise<Doctor> {
     try {
@@ -33,6 +41,17 @@ export class DoctorsService {
   }
 
   async delete(doctorId: string): Promise<boolean> {
+    const rooms = await this.roomsService.findManyWithOptions({
+      where: { doctorId },
+    });
+
+    if (rooms.length) {
+      throw new HttpException(
+        'The doctor can’t be removed if he is assigned to Room or he has a scheduled appointment',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     try {
       await this.doctorsRepository.delete(doctorId);
       return true;
@@ -54,13 +73,23 @@ export class DoctorsService {
     try {
       return await this.doctorsRepository.find();
     } catch (err) {
-      throw new HttpException(err, HttpStatus.BAD_REQUEST);
+      throw new HttpException(err, HttpStatus.NOT_FOUND);
     }
   }
 
   async findOneById(id: string): Promise<Doctor> {
     try {
       return await this.doctorsRepository.findOne(id);
+    } catch (err) {
+      throw new HttpException(err, HttpStatus.NOT_FOUND);
+    }
+  }
+
+  async findManyWithOptions(
+    options: FindManyOptions<Doctor>,
+  ): Promise<Doctor[]> {
+    try {
+      return await this.doctorsRepository.find(options);
     } catch (err) {
       throw new HttpException(err, HttpStatus.BAD_REQUEST);
     }
