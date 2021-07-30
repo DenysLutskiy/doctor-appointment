@@ -6,14 +6,13 @@ import {
   ResolveField,
   Parent,
 } from '@nestjs/graphql';
-
 import { RoomsService } from './rooms.service';
 import { CreateRoomInput } from './dto/create-room.input';
+import { UseGuards } from '@nestjs/common';
+import { AdminGuard } from 'src/guards/admin.guard';
 import { DoctorsService } from 'src/modules/doctors/doctors.service';
 import { Room } from './entities/room.entity';
 import { Doctor } from 'src/modules/doctors/entities/doctor.entity';
-import { CanPass } from 'src/utils/canpass.decorator';
-import { Roles } from 'src/types/enums/user-roles.enum';
 
 @Resolver('Room')
 export class RoomsResolver {
@@ -23,7 +22,7 @@ export class RoomsResolver {
   ) {}
 
   @Mutation('createRoom')
-  @CanPass(Roles.ADMIN)
+  @UseGuards(AdminGuard)
   create(
     @Args('createRoomInput') createRoomInput: CreateRoomInput,
   ): Promise<Room> {
