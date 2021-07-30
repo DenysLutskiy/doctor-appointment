@@ -1,4 +1,3 @@
-import { UseGuards } from '@nestjs/common';
 import {
   Resolver,
   Query,
@@ -11,7 +10,6 @@ import {
 import { AppointmentsService } from './appointments.service';
 import { CreateAppointmentInput } from './dto/create-appointment.input';
 import { Appointment } from './entities/appointment.entity';
-import { DoctorGuard } from 'src/guards/doctor.guard';
 import { Room } from '../rooms/entities/room.entity';
 import { Patient } from '../patients/entities/patient.entity';
 import { Doctor } from '../doctors/entities/doctor.entity';
@@ -29,7 +27,6 @@ export class AppointmentsResolver {
   ) {}
 
   @Mutation('createAppointment')
-  @UseGuards(DoctorGuard)
   create(
     @Args('createAppointmentInput')
     createAppointmentInput: CreateAppointmentInput,
