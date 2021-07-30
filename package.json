@@ -36,7 +36,6 @@
     "cache-manager": "^3.4.4",
     "cache-manager-redis-store": "^2.0.0",
     "class-validator": "^0.13.1",
-    "dateformat": "^4.5.1",
     "graphql": "^15.5.1",
     "graphql-tools": "^7.0.5",
     "jsonwebtoken": "^8.5.1",
