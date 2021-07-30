@@ -6,14 +6,15 @@ import {
   ResolveField,
   Parent,
 } from '@nestjs/graphql';
+
 import { PatientsService } from './patients.service';
 import { CreatePatientInput } from './dto/create-patient.input';
 import { Patient } from './entities/patient.entity';
-import { UseGuards } from '@nestjs/common';
-import { DoctorGuard } from 'src/guards/doctor.guard';
 import { CreateUserInput } from '../users/dto/create-user.input';
 import { UsersService } from '../users/users.service';
 import { User } from '../users/entities/user.entity';
+import { CanPass } from 'src/utils/canpass.decorator';
+import { Roles } from 'src/types/enums/user-roles.enum';
 
 @Resolver('Patient')
 export class PatientsResolver {
@@ -23,7 +24,7 @@ export class PatientsResolver {
   ) {}
 
   @Mutation('createPatient')
-  @UseGuards(DoctorGuard)
+  @CanPass(Roles.ADMIN, Roles.DOCTOR)
   create(
     @Args('createPatientInput') createPatientInput: CreatePatientInput,
     @Args('userId') userId: string,

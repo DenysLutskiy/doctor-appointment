@@ -1,4 +1,3 @@
-import { UseGuards } from '@nestjs/common';
 import {
   Resolver,
   Query,
@@ -7,18 +6,19 @@ import {
   ResolveField,
   Parent,
 } from '@nestjs/graphql';
-import { AdminGuard } from 'src/guards/admin.guard';
+
 import { Specialization } from 'src/modules/specializations/entities/specialization.entity';
 import { SpecializationsService } from 'src/modules/specializations/specializations.service';
 import { User } from 'src/modules/users/entities/user.entity';
 import { UsersService } from 'src/modules/users/users.service';
+import { CanPass } from 'src/utils/canpass.decorator';
+import { Roles } from 'src/types/enums/user-roles.enum';
 import { DoctorsService } from './doctors.service';
 import { CreateDoctorInput } from './dto/create-doctor.input';
 import { EditDoctorInput } from './dto/edit-doctor.input';
 import { Doctor } from './entities/doctor.entity';
 
 @Resolver('Doctor')
-@UseGuards(AdminGuard)
 export class DoctorsResolver {
   constructor(
     private readonly doctorsService: DoctorsService,
@@ -27,6 +27,7 @@ export class DoctorsResolver {
   ) {}
 
   @Mutation('createDoctor')
+  @CanPass(Roles.ADMIN)
   create(
     @Args('createDoctorInput') createDoctorInput: CreateDoctorInput,
   ): Promise<Doctor> {
