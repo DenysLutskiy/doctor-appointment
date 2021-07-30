@@ -5,28 +5,37 @@ import {
   HttpStatus,
   Injectable,
 } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
 import { GqlExecutionContext } from '@nestjs/graphql';
 
 import { AuthService } from 'src/modules/auth/auth.service';
-import { Roles } from 'src/types/enums/user-roles.enum';
 
 @Injectable()
-export class AdminGuard implements CanActivate {
-  constructor(private readonly authService: AuthService) {}
+export class RolesGuard implements CanActivate {
+  constructor(
+    private readonly authService: AuthService,
+    private readonly reflector: Reflector,
+  ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
+    const roles = this.reflector.get<string[]>('roles', context.getHandler());
     const ctx = GqlExecutionContext.create(context).getContext();
+
+    if (!roles) {
+      return true;
+    }
     if (!ctx.req.headers.autorization) {
       return false;
     }
+
     ctx.user = await this.authService.validateToken(
       ctx.req.headers.autorization,
     );
-
-    if (ctx.user.role !== Roles.ADMIN) {
+    const roleMatch = roles.find((role) => role === ctx.user.role);
+    if (!roleMatch) {
       throw new HttpException(
         "You don't have permissions",
-        HttpStatus.UNAUTHORIZED,
+        HttpStatus.FORBIDDEN,
       );
     }
     return true;

@@ -1,23 +1,22 @@
-import { UseGuards } from '@nestjs/common';
 import {
   Resolver,
-  Query,
   Mutation,
   Args,
   ResolveField,
   Parent,
+  Query,
 } from '@nestjs/graphql';
 
-import { AdminGuard } from 'src/guards/admin.guard';
-import { DoctorsService } from '../doctors/doctors.service';
-import { Doctor } from '../doctors/entities/doctor.entity';
 import { CreateSpecializationInput } from './dto/create-specialization.input';
 import { EditSpecializationInput } from './dto/edit-specialization.input';
 import { Specialization } from './entities/specialization.entity';
 import { SpecializationsService } from './specializations.service';
+import { CanPass } from 'src/utils/canpass.decorator';
+import { Roles } from 'src/types/enums/user-roles.enum';
+import { DoctorsService } from '../doctors/doctors.service';
+import { Doctor } from '../doctors/entities/doctor.entity';
 
 @Resolver('Specialization')
-@UseGuards(AdminGuard)
 export class SpecializationsResolver {
   constructor(
     private readonly specializationsService: SpecializationsService,
@@ -30,6 +29,7 @@ export class SpecializationsResolver {
   }
 
   @Mutation('createSpecialization')
+  @CanPass(Roles.ADMIN)
   create(
     @Args('createSpecializationInput')
     createSpecializationInput: CreateSpecializationInput,
@@ -60,10 +60,8 @@ export class SpecializationsResolver {
 
   @ResolveField('doctors')
   async getDoctor(@Parent() specialization: Specialization): Promise<Doctor[]> {
-    return (
-      await this.specializationsService.findOneById(specialization.id, {
-        relations: ['doctors'],
-      })
-    ).doctors;
+    return await this.doctorsService.findManyWithOptions({
+      where: { specializationId: specialization.id },
+    });
   }
 }

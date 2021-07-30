@@ -69,13 +69,12 @@ export class SpecializationsService {
 
   findAll(filter: undefined | string): Promise<Specialization[]> {
     try {
-      if (filter) {
-        const text = ILike(`%${filter}%`);
-        return this.specializationRepository.find({
-          where: [{ name: text }],
-        });
+      if (!filter) {
+        filter = '';
       }
-      return this.specializationRepository.find();
+      return this.specializationRepository.find({
+        where: [{ name: ILike(`%${filter}%`) }],
+      });
     } catch (err) {
       throw new HttpException(err, HttpStatus.BAD_REQUEST);
     }

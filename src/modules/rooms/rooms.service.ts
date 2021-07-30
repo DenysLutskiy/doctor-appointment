@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindOneOptions, Repository } from 'typeorm';
 import { CreateRoomInput } from './dto/create-room.input';
 import { Room } from './entities/room.entity';
 
@@ -30,6 +30,13 @@ export class RoomsService {
   async findOneById(id: string): Promise<Room> {
     try {
       return await this.roomsRepository.findOne(id);
+    } catch (err) {
+      throw new HttpException(err, HttpStatus.BAD_REQUEST);
+    }
+  }
+  async findManyWithOptions(options: FindOneOptions<Room>): Promise<Room[]> {
+    try {
+      return await this.roomsRepository.find(options);
     } catch (err) {
       throw new HttpException(err, HttpStatus.BAD_REQUEST);
     }
