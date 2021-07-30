@@ -1,19 +1,19 @@
 import { Resolver, Mutation, Query, Args } from '@nestjs/graphql';
+import { UpdateResult } from 'typeorm';
+
 import { HospitalsService } from './hospitals.service';
 import { CreateHospitalInput } from './dto/create-hospital.input';
-import { UseGuards } from '@nestjs/common';
-import { AdminGuard } from 'src/guards/admin.guard';
 import { EditHospitalInput } from './dto/edit-hospital.input';
 import { Hospital } from './entities/hospital.entity';
-import { UpdateResult } from 'typeorm';
-import { UserGuard } from 'src/guards/user.guard';
+import { CanPass } from 'src/utils/canpass.decorator';
+import { Roles } from 'src/types/enums/user-roles.enum';
 
 @Resolver('Hospital')
 export class HospitalsResolver {
   constructor(private readonly hospitalsService: HospitalsService) {}
 
   @Mutation('createHospital')
-  @UseGuards(AdminGuard)
+  @CanPass(Roles.ADMIN)
   create(
     @Args('createHospitalInput') createHospitalInput: CreateHospitalInput,
   ): Promise<Hospital> {
@@ -21,7 +21,7 @@ export class HospitalsResolver {
   }
 
   @Mutation('editHospital')
-  @UseGuards(AdminGuard)
+  @CanPass(Roles.ADMIN)
   edit(
     @Args('id') hospitalId: string,
     @Args('editHospitalInput') editHospitalInput: EditHospitalInput,
@@ -30,7 +30,7 @@ export class HospitalsResolver {
   }
 
   @Mutation('deletePhoneNumber')
-  @UseGuards(AdminGuard)
+  @CanPass(Roles.ADMIN)
   deletePhoneNumber(
     @Args('id') hospitalId: string,
     @Args('phoneNumbers') phoneNumbers: string[],
@@ -39,19 +39,17 @@ export class HospitalsResolver {
   }
 
   @Mutation('deleteHospital')
-  @UseGuards(AdminGuard)
+  @CanPass(Roles.ADMIN)
   delete(@Args('id') hospitalId: string): Promise<boolean> {
     return this.hospitalsService.delete(hospitalId);
   }
 
   @Query('hospital')
-  @UseGuards(UserGuard)
   findOne(@Args('id') hospitalId: string): Promise<Hospital> {
     return this.hospitalsService.findOneById(hospitalId);
   }
 
   @Query('hospitals')
-  @UseGuards(UserGuard)
   findAll(@Args('filter') filter: string): Promise<Hospital[]> {
     return this.hospitalsService.findAll(filter);
   }
