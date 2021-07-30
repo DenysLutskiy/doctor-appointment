@@ -1,4 +1,8 @@
 import { Query, Resolver, Mutation, Args, Context } from '@nestjs/graphql';
+<<<<<<< HEAD
+=======
+
+>>>>>>> feature/ft-59/ability_to_create_a_new_patient
 import { signInResponseType } from 'src/types/interfaces/signin-response.interface';
 import { AuthService } from './auth.service';
 import { SigninUserInput } from './dto/signin-user.input';

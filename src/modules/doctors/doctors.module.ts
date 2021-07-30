@@ -8,6 +8,10 @@ import { UsersModule } from 'src/modules/users/users.module';
 import { SpecializationsModule } from 'src/modules/specializations/specializations.module';
 import { AuthModule } from 'src/modules/auth/auth.module';
 import * as REDIS_CONFIG from 'src/config/redis';
+import { RoomsService } from '../rooms/rooms.service';
+import { AppointmentsService } from '../appointments/appointments.service';
+import { Room } from '../rooms/entities/room.entity';
+import { Appointment } from '../appointments/entities/appointment.entity';
 
 @Module({
   imports: [
@@ -15,9 +19,14 @@ import * as REDIS_CONFIG from 'src/config/redis';
     SpecializationsModule,
     AuthModule,
     CacheModule.register(REDIS_CONFIG),
-    TypeOrmModule.forFeature([Doctor]),
+    TypeOrmModule.forFeature([Doctor, Room, Appointment]),
   ],
-  providers: [DoctorsResolver, DoctorsService],
+  providers: [
+    DoctorsResolver,
+    DoctorsService,
+    RoomsService,
+    AppointmentsService,
+  ],
   exports: [DoctorsService, TypeOrmModule],
 })
 export class DoctorsModule {}
