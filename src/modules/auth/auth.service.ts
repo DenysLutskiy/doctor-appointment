@@ -26,27 +26,27 @@ export class AuthService {
 
   async validateToken(auth: string): Promise<User> {
     if (auth.split(' ')[0] !== 'Bearer') {
-      throw new HttpException('Invalid token', HttpStatus.UNAUTHORIZED);
+      throw new HttpException('Invalid token', HttpStatus.BAD_REQUEST);
     }
     const token = auth.split(' ')[1];
     const tknRevoked = await this.cacheManager.get(token);
-    try {
-      if (tknRevoked) {
-        throw new HttpException('Token is revoked', HttpStatus.UNAUTHORIZED);
-      }
-      const userPayload: JWTPayloadType = jwt.verify(
-        token,
-        process.env.JWT_SECRET,
-      ) as JWTPayloadType;
 
-      const user = await this.usersRepository.findOne(userPayload.id);
-      if (!user) {
-        throw new HttpException('User not found', HttpStatus.UNAUTHORIZED);
-      }
-      return user;
+    if (tknRevoked) {
+      throw new HttpException('Token is revoked', HttpStatus.UNAUTHORIZED);
+    }
+
+    let userPayload: JWTPayloadType;
+    try {
+      userPayload = jwt.verify(token, process.env.JWT_SECRET) as JWTPayloadType;
     } catch (err) {
       throw new HttpException(err, HttpStatus.UNAUTHORIZED);
     }
+
+    const user = await this.usersRepository.findOne(userPayload.id);
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+    return user;
   }
 
   async signinWithLoginAndPassword(
