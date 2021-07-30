@@ -37,8 +37,11 @@ export class Appointment {
   @Column()
   roomId: string;
 
-  @Column()
-  scheduleDateAndTime: Date;
+  @Column('timestamp without time zone')
+  appointmentStart: Date;
+
+  @Column('timestamp without time zone')
+  appointmentEnd: Date;
 
   @Column()
   duration: number;
