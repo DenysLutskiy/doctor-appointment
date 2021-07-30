@@ -17,7 +17,7 @@ export class CreateAppointmentInput {
 
   @Field()
   @IsDateString()
-  appointmentStart: string;
+  scheduleDateAndTime: string;
 
   @Field()
   @IsNumber()
