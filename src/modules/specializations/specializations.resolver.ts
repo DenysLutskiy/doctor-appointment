@@ -1,6 +1,7 @@
 import { Resolver, Mutation, Args } from '@nestjs/graphql';
 
 import { CreateSpecializationInput } from './dto/create-specialization.input';
+import { EditSpecializationInput } from './dto/edit-specialization.input';
 import { Specialization } from './entities/specialization.entity';
 import { SpecializationsService } from './specializations.service';
 import { CanPass } from 'src/utils/canpass.decorator';
@@ -19,5 +20,28 @@ export class SpecializationsResolver {
     createSpecializationInput: CreateSpecializationInput,
   ): Promise<Specialization> {
     return this.specializationsService.create(createSpecializationInput);
+  }
+
+  @Mutation('editSpecialization')
+  @CanPass(Roles.ADMIN)
+  edit(
+    @Args('specializationId')
+    specializationId: string,
+    @Args('editSpecializationInput')
+    editSpecializationInput: EditSpecializationInput,
+  ): Promise<Specialization> {
+    return this.specializationsService.edit(
+      specializationId,
+      editSpecializationInput,
+    );
+  }
+
+  @Mutation('deleteSpecialization')
+  @CanPass(Roles.ADMIN)
+  delete(
+    @Args('specializationId')
+    specializationId: string,
+  ): Promise<boolean> {
+    return this.specializationsService.delete(specializationId);
   }
 }

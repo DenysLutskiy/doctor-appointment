@@ -5,8 +5,23 @@ type Mutation {
   ): Specialization!
 }
 
+type Mutation {
+  editSpecialization(
+    specializationId: ID!
+    editSpecializationInput: EditSpecializationInput!
+  ): Specialization!
+}
+
+type Mutation {
+  deleteSpecialization(specializationId: ID!): Boolean!
+}
+
 # -------------------------------- Input types ------------------------------- #
 input CreateSpecializationInput {
+  name: String!
+}
+
+input EditSpecializationInput {
   name: String!
 }
 

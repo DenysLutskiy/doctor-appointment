@@ -3,9 +3,10 @@ import { SpecializationsService } from './specializations.service';
 import { SpecializationsResolver } from './specializations.resolver';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Specialization } from './entities/specialization.entity';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Specialization])],
+  imports: [AuthModule, TypeOrmModule.forFeature([Specialization])],
   providers: [SpecializationsResolver, SpecializationsService],
   exports: [SpecializationsService, TypeOrmModule],
 })
