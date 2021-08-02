@@ -14,6 +14,7 @@ import { Room } from './entities/room.entity';
 import { Doctor } from 'src/modules/doctors/entities/doctor.entity';
 import { CanPass } from 'src/utils/canpass.decorator';
 import { Roles } from 'src/types/enums/user-roles.enum';
+import { EditRoomInput } from './dto/edit-room.input';
 
 @Resolver('Room')
 export class RoomsResolver {
@@ -28,6 +29,15 @@ export class RoomsResolver {
     @Args('createRoomInput') createRoomInput: CreateRoomInput,
   ): Promise<Room> {
     return this.roomsService.create(createRoomInput);
+  }
+
+  @Mutation('editRoom')
+  @CanPass(Roles.ADMIN)
+  edit(
+    @Args('roomId') roomId: string,
+    @Args('editRoomInput') editRoomInput: EditRoomInput,
+  ): Promise<Room> {
+    return this.roomsService.edit(roomId, editRoomInput);
   }
 
   @Query('rooms')

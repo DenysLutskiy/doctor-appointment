@@ -6,10 +6,16 @@ type Query {
 # --------------------------------- Mutations -------------------------------- #
 type Mutation {
   createRoom(createRoomInput: CreateRoomInput!): Room!
+  editRoom(roomId: ID!, editRoomInput: EditRoomInput!): Room!
 }
 
 # -------------------------------- Input types ------------------------------- #
 input CreateRoomInput {
+  name: String!
+  doctorId: String
+}
+
+input EditRoomInput {
   name: String!
   doctorId: String
 }

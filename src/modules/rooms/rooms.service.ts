@@ -19,6 +19,14 @@ export class RoomsService {
     }
   }
 
+  async edit(id: string, editRoomInput: any): Promise<Room> {
+    const updatedRoom = await this.roomsRepository.update(id, editRoomInput);
+    if (!updatedRoom) {
+      throw new HttpException("Room wasn't updated", HttpStatus.BAD_REQUEST);
+    }
+    return await this.roomsRepository.findOne(id);
+  }
+
   async findAll(): Promise<Room[]> {
     try {
       return await this.roomsRepository.find();
