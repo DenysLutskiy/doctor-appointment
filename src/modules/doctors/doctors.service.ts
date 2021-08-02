@@ -1,12 +1,8 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-<<<<<<< HEAD
 import { FindManyOptions, Repository } from 'typeorm';
-=======
-import { Repository } from 'typeorm';
 import { AppointmentsService } from '../appointments/appointments.service';
 import { RoomsService } from '../rooms/rooms.service';
->>>>>>> feature/ft-55/ability_to_remove_an_existing_specialization
 
 import { SpecializationsService } from '../specializations/specializations.service';
 import { UsersService } from '../users/users.service';
@@ -45,7 +41,11 @@ export class DoctorsService {
       where: { doctorId },
     });
 
-    if (rooms.length) {
+    const appointments = await this.appointmentsService.findManyWithOptions({
+      where: { doctorId },
+    });
+
+    if (rooms.length || appointments.length) {
       throw new HttpException(
         'The doctor can’t be removed if he is assigned to Room or he has a scheduled appointment',
         HttpStatus.BAD_REQUEST,
