@@ -15,6 +15,7 @@ import { UsersService } from '../users/users.service';
 import { User } from '../users/entities/user.entity';
 import { CanPass } from 'src/utils/canpass.decorator';
 import { Roles } from 'src/types/enums/user-roles.enum';
+import { EditPatientInput } from './dto/edit-patient.input';
 
 @Resolver('Patient')
 export class PatientsResolver {
@@ -35,6 +36,14 @@ export class PatientsResolver {
       userId,
       createUserInput,
     );
+  }
+
+  @Mutation('editPatient')
+  edit(
+    @Args('patientId') patientId: string,
+    @Args('editPatientInput') editPatientInput: EditPatientInput,
+  ): Promise<Patient> {
+    return this.patientsService.edit(patientId, editPatientInput);
   }
 
   @Query('patients')

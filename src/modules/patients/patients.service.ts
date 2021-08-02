@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { CreateUserInput } from '../users/dto/create-user.input';
 import { UsersService } from '../users/users.service';
 import { CreatePatientInput } from './dto/create-patient.input';
+import { EditPatientInput } from './dto/edit-patient.input';
 import { Patient } from './entities/patient.entity';
 
 @Injectable()
@@ -31,17 +32,35 @@ export class PatientsService {
         HttpStatus.BAD_REQUEST,
       );
     }
-    const patien = this.patientsRepository.create(createPatientInput);
-    if (userId && !createUserInput) {
-      patien.userId = userId;
-    }
-    if (createUserInput && !userId) {
-      const user = await this.usersService.create(createUserInput);
-      patien.userId = user.id;
-    }
-
     try {
+      const patien = this.patientsRepository.create(createPatientInput);
+      if (userId && !createUserInput) {
+        patien.userId = userId;
+      }
+      if (createUserInput && !userId) {
+        const user = await this.usersService.create(createUserInput);
+        patien.userId = user.id;
+      }
+
       return await this.patientsRepository.save(patien);
+    } catch (err) {
+      throw new HttpException(err, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async edit(
+    patientId: string,
+    editPatientInput: EditPatientInput,
+  ): Promise<Patient> {
+    try {
+      if (Object.keys(editPatientInput).length === 0) {
+        throw new HttpException(
+          'You must pass at least one field to update',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+      await this.patientsRepository.update(patientId, editPatientInput);
+      return await this.findOneById(patientId);
     } catch (err) {
       throw new HttpException(err, HttpStatus.BAD_REQUEST);
     }
