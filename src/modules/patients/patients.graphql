@@ -1,0 +1,35 @@
+# ---------------------------------- Querys ---------------------------------- #
+type Query {
+  patients: [Patient]!
+  patient(id: ID!): Patient!
+}
+
+# --------------------------------- Mutations -------------------------------- #
+type Mutation {
+  createPatient(
+    createPatientInput: CreatePatientInput!
+    userId: String
+    createUserInput: CreateUserInput
+  ): Patient!
+}
+
+# -------------------------------- Input types ------------------------------- #
+input CreatePatientInput {
+  gender: String!
+  age: Int!
+  bornCity: String!
+  bornCountry: String!
+  address: String!
+}
+
+# --------------------------------- Entities --------------------------------- #
+type Patient {
+  id: ID!
+  user: User!
+  gender: String!
+  age: Int!
+  bornCity: String!
+  bornCountry: String!
+  address: String!
+  createdAt: String!
+}
