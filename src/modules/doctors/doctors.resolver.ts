@@ -43,6 +43,7 @@ export class DoctorsResolver {
   }
 
   @Mutation('deleteDoctor')
+  @CanPass(Roles.ADMIN)
   delete(@Args('doctorId') doctorId: string): Promise<boolean> {
     return this.doctorsService.delete(doctorId);
   }

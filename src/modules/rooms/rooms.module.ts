@@ -1,4 +1,4 @@
-import { CacheModule, Module } from '@nestjs/common';
+import { CacheModule, forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { RoomsService } from './rooms.service';
@@ -14,8 +14,8 @@ import * as REDIS_CONFIG from 'src/config/redis';
   imports: [
     AuthModule,
     UsersModule,
-    DoctorsModule,
-    SpecializationsModule,
+    forwardRef(() => DoctorsModule),
+    forwardRef(() => SpecializationsModule),
     CacheModule.register(REDIS_CONFIG),
     TypeOrmModule.forFeature([Room]),
   ],
