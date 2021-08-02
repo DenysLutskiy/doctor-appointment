@@ -1,15 +1,15 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { IsDefined, IsString } from 'class-validator';
+import { IsString } from 'class-validator';
 
 @InputType()
 export class EditDoctorInput {
   @Field()
-  @IsDefined()
   @IsString()
-  specializationId: string;
+  specializationId?: string;
 
   @Field()
-  @IsDefined()
   @IsString()
-  level: string;
+  level?: string;
+
+  associatedRooms?: string[];
 }
