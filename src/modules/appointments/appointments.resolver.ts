@@ -16,6 +16,8 @@ import { Doctor } from '../doctors/entities/doctor.entity';
 import { DoctorsService } from '../doctors/doctors.service';
 import { PatientsService } from '../patients/patients.service';
 import { RoomsService } from '../rooms/rooms.service';
+import { CanPass } from 'src/utils/canpass.decorator';
+import { Roles } from 'src/types/enums/user-roles.enum';
 
 @Resolver('Appointment')
 export class AppointmentsResolver {
@@ -27,6 +29,7 @@ export class AppointmentsResolver {
   ) {}
 
   @Mutation('createAppointment')
+  @CanPass(Roles.ADMIN, Roles.DOCTOR)
   create(
     @Args('createAppointmentInput')
     createAppointmentInput: CreateAppointmentInput,

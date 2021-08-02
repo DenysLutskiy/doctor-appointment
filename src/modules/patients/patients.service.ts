@@ -61,7 +61,7 @@ export class PatientsService {
     }
   }
 
-  edit(
+  async edit(
     patientId: string,
     editPatientInput: EditPatientInput,
   ): Promise<Patient> {
@@ -72,8 +72,8 @@ export class PatientsService {
           HttpStatus.BAD_REQUEST,
         );
       }
-      this.patientsRepository.update(patientId, editPatientInput);
-      return this.findOneById(patientId);
+      await this.patientsRepository.update(patientId, editPatientInput);
+      return await this.findOneById(patientId);
     } catch (err) {
       throw new HttpException(err, HttpStatus.BAD_REQUEST);
     }
@@ -82,14 +82,11 @@ export class PatientsService {
   async delete(patientId: string): Promise<boolean> {
     try {
       const patinent = await this.patientsRepository.findOne(patientId);
-      const deletedUser = await this.patientsRepository.delete(patientId);
-      if (!deletedUser) {
-        throw new HttpException(
-          "User wasn't creaed deleted",
-          HttpStatus.BAD_REQUEST,
-        );
+      const deletedPatinent = await this.patientsRepository.delete(patientId);
+      if (!deletedPatinent) {
+        throw new HttpException("User wasn't deleted", HttpStatus.BAD_REQUEST);
       }
-      if (deletedUser && patientId) {
+      if (deletedPatinent && patientId) {
         const user: EditUserInput = { role: 'guest' };
         await this.usersService.edit(patinent.userId, user);
       }
