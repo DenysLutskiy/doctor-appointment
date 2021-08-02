@@ -61,7 +61,7 @@ export class PatientsService {
     }
   }
 
-  edit(
+  async edit(
     patientId: string,
     editPatientInput: EditPatientInput,
   ): Promise<Patient> {
@@ -72,8 +72,8 @@ export class PatientsService {
           HttpStatus.BAD_REQUEST,
         );
       }
-      this.patientsRepository.update(patientId, editPatientInput);
-      return this.findOneById(patientId);
+      await this.patientsRepository.update(patientId, editPatientInput);
+      return await this.findOneById(patientId);
     } catch (err) {
       throw new HttpException(err, HttpStatus.BAD_REQUEST);
     }
