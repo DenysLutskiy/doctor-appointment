@@ -44,7 +44,11 @@ export class DoctorsService {
       where: { doctorId },
     });
 
-    if (rooms.length) {
+    const appointments = await this.appointmentsService.findManyWithOptions({
+      where: { doctorId },
+    });
+
+    if (rooms.length || appointments.length) {
       throw new HttpException(
         'The doctor can’t be removed if he is assigned to Room or he has a scheduled appointment',
         HttpStatus.BAD_REQUEST,
