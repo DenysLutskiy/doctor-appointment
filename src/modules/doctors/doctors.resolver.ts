@@ -34,7 +34,6 @@ export class DoctorsResolver {
   }
 
   @Mutation('deleteDoctor')
-  @UseGuards(AdminGuard)
   delete(@Args('doctorId') doctorId: string): Promise<boolean> {
     return this.doctorsService.delete(doctorId);
   }

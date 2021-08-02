@@ -23,6 +23,7 @@ export class SpecializationsResolver {
   }
 
   @Mutation('editSpecialization')
+  @CanPass(Roles.ADMIN)
   edit(
     @Args('specializationId')
     specializationId: string,
@@ -36,6 +37,7 @@ export class SpecializationsResolver {
   }
 
   @Mutation('deleteSpecialization')
+  @CanPass(Roles.ADMIN)
   delete(
     @Args('specializationId')
     specializationId: string,

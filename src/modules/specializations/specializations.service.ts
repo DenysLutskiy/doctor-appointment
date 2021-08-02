@@ -23,13 +23,13 @@ export class SpecializationsService {
     }
   }
 
-  edit(
+  async edit(
     id: string,
     editSpecializationInput: EditSpecializationInput,
   ): Promise<Specialization> {
     try {
-      this.specializationRepository.update(id, editSpecializationInput);
-      return this.findOneById(id);
+      await this.specializationRepository.update(id, editSpecializationInput);
+      return await this.findOneById(id);
     } catch (err) {
       throw new HttpException(err, HttpStatus.BAD_REQUEST);
     }
