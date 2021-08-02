@@ -1,5 +1,4 @@
 import { Query, Resolver, Mutation, Args, Context } from '@nestjs/graphql';
-
 import { signInResponseType } from 'src/types/interfaces/signin-response.interface';
 import { AuthService } from './auth.service';
 import { SigninUserInput } from './dto/signin-user.input';

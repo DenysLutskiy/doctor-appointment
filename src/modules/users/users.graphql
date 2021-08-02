@@ -19,7 +19,7 @@ input CreateUserInput {
   email: String!
   login: String
   password: String!
-  role: String
+  role: Roles
 }
 
 input EditUserInput {
@@ -28,7 +28,7 @@ input EditUserInput {
   mobilePhone: String
   email: String
   password: String
-  role: String
+  role: Roles
 }
 
 # --------------------------------- Entities --------------------------------- #
@@ -41,4 +41,12 @@ type User {
   login: String!
   role: String!
   createdAt: String!
+}
+
+# ----------------------------------- Enums ---------------------------------- #
+enum Roles {
+  GUEST
+  PATIENT
+  DOCTOR
+  ADMIN
 }

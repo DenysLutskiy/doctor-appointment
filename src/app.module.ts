@@ -15,6 +15,7 @@ import { ApolloError } from 'apollo-server-express';
 import { HttpExceptionFilter } from './utils/http-exception.filter';
 import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from './guards/roles.guard';
+import { AppointmentsModule } from './modules/appointments/appointments.module';
 
 @Module({
   imports: [
@@ -56,6 +57,7 @@ import { RolesGuard } from './guards/roles.guard';
     DoctorsModule,
     RoomsModule,
     PatientsModule,
+    AppointmentsModule,
   ],
   providers: [
     {
