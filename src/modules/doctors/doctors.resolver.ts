@@ -33,6 +33,12 @@ export class DoctorsResolver {
     return this.doctorsService.create(createDoctorInput);
   }
 
+  @Mutation('deleteDoctor')
+  @CanPass(Roles.ADMIN)
+  delete(@Args('doctorId') doctorId: string): Promise<boolean> {
+    return this.doctorsService.delete(doctorId);
+  }
+
   @Query('doctors')
   findAll(): Promise<Doctor[]> {
     return this.doctorsService.findAll();

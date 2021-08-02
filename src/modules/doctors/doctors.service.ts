@@ -1,8 +1,11 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Specialization } from 'src/modules/specializations/entities/specialization.entity';
-import { User } from 'src/modules/users/entities/user.entity';
 import { Repository } from 'typeorm';
+import { AppointmentsService } from '../appointments/appointments.service';
+import { RoomsService } from '../rooms/rooms.service';
+
+import { SpecializationsService } from '../specializations/specializations.service';
+import { UsersService } from '../users/users.service';
 import { CreateDoctorInput } from './dto/create-doctor.input';
 import { Doctor } from './entities/doctor.entity';
 
@@ -11,32 +14,49 @@ export class DoctorsService {
   constructor(
     @InjectRepository(Doctor)
     private doctorsRepository: Repository<Doctor>,
-    @InjectRepository(User)
-    private usersRepository: Repository<User>,
-    @InjectRepository(Specialization)
-    private specializationsRepository: Repository<Specialization>,
+    private readonly usersService: UsersService,
+    private readonly specializationsService: SpecializationsService,
+    private readonly appointmentsService: AppointmentsService,
+    private readonly roomsService: RoomsService,
   ) {}
   async create(createDoctorInput: CreateDoctorInput): Promise<Doctor> {
-    const doctor = await this.doctorsRepository.create(createDoctorInput);
-    if (!doctor) {
-      throw new HttpException(`Doctor wasn't created`, HttpStatus.BAD_REQUEST);
-    }
+    try {
+      const doctor = this.doctorsRepository.create(createDoctorInput);
+      doctor.specialization = await this.specializationsService.findOneById(
+        createDoctorInput.specializationId,
+      );
+      doctor.user = await this.usersService.findOneById(
+        createDoctorInput.userId,
+      );
 
-    doctor.specialization = await this.specializationsRepository.findOne({
-      id: createDoctorInput.specializationId,
+      return await this.doctorsRepository.save(doctor);
+    } catch (err) {
+      throw new HttpException(err, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async delete(doctorId: string): Promise<boolean> {
+    const rooms = await this.roomsService.findManyWithOptions({
+      where: { doctorId },
     });
-    doctor.user = await this.usersRepository.findOne({
-      id: createDoctorInput.userId,
+
+    const appointments = await this.appointmentsService.findManyWithOptions({
+      where: { doctorId },
     });
 
-    if (!doctor.user) {
-      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-    }
-    if (!doctor.specialization) {
-      throw new HttpException('Specialization not found', HttpStatus.NOT_FOUND);
+    if (rooms.length || appointments.length) {
+      throw new HttpException(
+        'The doctor can’t be removed if he is assigned to Room or he has a scheduled appointment',
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
-    return await this.doctorsRepository.save(doctor);
+    try {
+      await this.doctorsRepository.delete(doctorId);
+      return true;
+    } catch (err) {
+      throw new HttpException(err, HttpStatus.BAD_REQUEST);
+    }
   }
 
   async findAll(): Promise<Doctor[]> {
