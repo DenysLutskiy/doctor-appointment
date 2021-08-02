@@ -15,6 +15,7 @@ import { CanPass } from 'src/utils/canpass.decorator';
 import { Roles } from 'src/types/enums/user-roles.enum';
 import { DoctorsService } from './doctors.service';
 import { CreateDoctorInput } from './dto/create-doctor.input';
+import { EditDoctorInput } from './dto/edit-doctor.input';
 import { Doctor } from './entities/doctor.entity';
 
 @Resolver('Doctor')
@@ -31,6 +32,14 @@ export class DoctorsResolver {
     @Args('createDoctorInput') createDoctorInput: CreateDoctorInput,
   ): Promise<Doctor> {
     return this.doctorsService.create(createDoctorInput);
+  }
+
+  @Mutation('editDoctor')
+  edit(
+    @Args('doctorId') doctorId: string,
+    @Args('editDoctorInput') editDoctorInput: EditDoctorInput,
+  ): Promise<Doctor> {
+    return this.doctorsService.edit(doctorId, editDoctorInput);
   }
 
   @Mutation('deleteDoctor')

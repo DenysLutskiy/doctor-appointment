@@ -6,12 +6,18 @@ type Query {
 # --------------------------------- Mutations -------------------------------- #
 type Mutation {
   createDoctor(createDoctorInput: CreateDoctorInput!): Doctor!
+  editDoctor(doctorId: ID!, editDoctorInput: EditDoctorInput!): Doctor!
   deleteDoctor(doctorId: ID!): Boolean!
 }
 
 # -------------------------------- Input types ------------------------------- #
 input CreateDoctorInput {
   userId: String!
+  specializationId: String!
+  level: Levels!
+}
+
+input EditDoctorInput {
   specializationId: String!
   level: Levels!
 }
