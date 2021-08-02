@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindManyOptions, Repository } from 'typeorm';
 import { AppointmentsService } from '../appointments/appointments.service';
 import { RoomsService } from '../rooms/rooms.service';
 
@@ -72,6 +72,16 @@ export class DoctorsService {
       return await this.doctorsRepository.findOne(id);
     } catch (err) {
       throw new HttpException(err, HttpStatus.NOT_FOUND);
+    }
+  }
+
+  async findManyWithOptions(
+    options: FindManyOptions<Doctor>,
+  ): Promise<Doctor[]> {
+    try {
+      return await this.doctorsRepository.find(options);
+    } catch (err) {
+      throw new HttpException(err, HttpStatus.BAD_REQUEST);
     }
   }
 }
