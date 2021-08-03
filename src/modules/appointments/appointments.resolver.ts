@@ -49,6 +49,15 @@ export class AppointmentsResolver {
     return this.appointmentsService.edit(appointmentId, editAppointmentInput);
   }
 
+  @Mutation('cancelAppointment')
+  @CanPass(Roles.ADMIN, Roles.DOCTOR)
+  cancel(
+    @Args('appointmentId')
+    appointmentId: string,
+  ): Promise<boolean> {
+    return this.appointmentsService.cancel(appointmentId);
+  }
+
   @Query('appointments')
   findAll(): Promise<Appointment[]> {
     return this.appointmentsService.findAll();
