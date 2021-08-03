@@ -6,11 +6,17 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOneOptions, Repository } from 'typeorm';
+import { Roles } from 'src/types/enums/user-roles.enum';
+import {
+  InfoForAdmin,
+  InfoForGuest,
+} from 'src/types/unions/restristed-rooms.union';
+import { FindOneOptions, ILike, Repository } from 'typeorm';
 
 import { AppointmentsService } from '../appointments/appointments.service';
 import { DoctorsService } from '../doctors/doctors.service';
 import { EditDoctorInput } from '../doctors/dto/edit-doctor.input';
+import { User } from '../users/entities/user.entity';
 import { CreateRoomInput } from './dto/create-room.input';
 import { Room } from './entities/room.entity';
 
@@ -95,12 +101,23 @@ export class RoomsService {
     return true;
   }
 
-  async findAll(): Promise<Room[]> {
-    try {
-      return await this.roomsRepository.find();
-    } catch (err) {
-      throw new HttpException(err, HttpStatus.BAD_REQUEST);
+  async findAll(
+    filter = '',
+    user: User,
+  ): Promise<InfoForAdmin[] | InfoForGuest[]> {
+    const resp: Room[] = await this.roomsRepository.find({
+      where: [{ name: ILike(`%${filter}%`) }],
+    });
+    if (user.role === Roles.ADMIN || user.role === Roles.DOCTOR) {
+      resp.map((room) =>
+        !room.doctorId
+          ? (room.doctorId = 'this room has no assigned doctor')
+          : room.doctorId,
+      );
+      return resp;
     }
+    resp.map((room) => delete room.doctorId);
+    return resp;
   }
 
   async findOneById(id: string): Promise<Room> {

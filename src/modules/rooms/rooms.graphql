@@ -1,6 +1,6 @@
 # ---------------------------------- Querys ---------------------------------- #
 type Query {
-  rooms: [Room]!
+  rooms(filter: String): [RestrictedRoom]!
 }
 
 # --------------------------------- Mutations -------------------------------- #
@@ -28,3 +28,18 @@ type Room {
   doctor: Doctor
   createdAt: String!
 }
+
+# ------------------------------ Response types ------------------------------ #
+type InfoForGuest {
+  id: ID!
+  name: String!
+}
+
+type InfoForAdmin {
+  id: ID!
+  name: String!
+  doctorId: String!
+}
+
+# ---------------------------------- Unions ---------------------------------- #
+union RestrictedRoom = InfoForAdmin | InfoForGuest

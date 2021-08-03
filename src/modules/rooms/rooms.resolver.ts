@@ -5,6 +5,7 @@ import {
   Args,
   ResolveField,
   Parent,
+  Context,
 } from '@nestjs/graphql';
 
 import { RoomsService } from './rooms.service';
@@ -15,6 +16,8 @@ import { Doctor } from 'src/modules/doctors/entities/doctor.entity';
 import { CanPass } from 'src/utils/canpass.decorator';
 import { Roles } from 'src/types/enums/user-roles.enum';
 import { EditRoomInput } from './dto/edit-room.input';
+import { User } from '../users/entities/user.entity';
+import { RestrictedRoom } from 'src/types/unions/restristed-rooms.union';
 
 @Resolver('Room')
 export class RoomsResolver {
@@ -47,8 +50,12 @@ export class RoomsResolver {
   }
 
   @Query('rooms')
-  findAll(): Promise<Room[]> {
-    return this.roomsService.findAll();
+  @CanPass(Roles.ADMIN, Roles.DOCTOR, Roles.PATIENT)
+  findAll(
+    @Context('user') user: User,
+    @Args('filter') filter: string,
+  ): Promise<RestrictedRoom[]> {
+    return this.roomsService.findAll(filter, user);
   }
 
   @ResolveField('doctor')

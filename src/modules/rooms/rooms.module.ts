@@ -10,6 +10,7 @@ import { Doctor } from '../doctors/entities/doctor.entity';
 import { DoctorsService } from '../doctors/doctors.service';
 import { UsersModule } from '../users/users.module';
 import { SpecializationsModule } from '../specializations/specializations.module';
+import { RestrictedRoomResolver } from 'src/types/unions/restristed-rooms.union';
 
 @Module({
   imports: [
@@ -20,7 +21,12 @@ import { SpecializationsModule } from '../specializations/specializations.module
     CacheModule.register(REDIS_CONFIG),
     TypeOrmModule.forFeature([Room, Doctor]),
   ],
-  providers: [RoomsResolver, RoomsService, DoctorsService],
+  providers: [
+    RoomsResolver,
+    RoomsService,
+    DoctorsService,
+    RestrictedRoomResolver,
+  ],
   exports: [RoomsService, TypeOrmModule],
 })
 export class RoomsModule {}
