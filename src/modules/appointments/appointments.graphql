@@ -8,12 +8,22 @@ type Mutation {
   createAppointment(
     createAppointmentInput: CreateAppointmentInput!
   ): Appointment!
+  editAppointment(
+    appointmentId: ID!
+    editAppointmentInput: EditAppointmentInput!
+  ): Appointment!
 }
 
 # -------------------------------- Input types ------------------------------- #
 input CreateAppointmentInput {
   doctorId: String!
   patientId: String!
+  roomId: String!
+  appointmentStart: Date!
+  duration: Int!
+}
+
+input EditAppointmentInput {
   roomId: String!
   appointmentStart: Date!
   duration: Int!

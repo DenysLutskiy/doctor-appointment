@@ -1,10 +1,11 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
+import { LessThanOrEqual, MoreThanOrEqual, Not, Repository } from 'typeorm';
 import * as dateFormat from 'dateformat';
 
 import { CreateAppointmentInput } from './dto/create-appointment.input';
 import { Appointment } from './entities/appointment.entity';
+import { EditAppointmentInput } from './dto/edit-appointment.input';
 
 @Injectable()
 export class AppointmentsService {
@@ -12,6 +13,7 @@ export class AppointmentsService {
     @InjectRepository(Appointment)
     private appointmentsRepository: Repository<Appointment>,
   ) {}
+
   async create(
     createAppointmentInput: CreateAppointmentInput,
   ): Promise<Appointment> {
@@ -48,6 +50,58 @@ export class AppointmentsService {
     } catch (err) {
       throw new HttpException(err, HttpStatus.BAD_REQUEST);
     }
+  }
+
+  async edit(
+    id: string,
+    editAppointmentInput: EditAppointmentInput,
+  ): Promise<Appointment> {
+    const apStart = editAppointmentInput.appointmentStart;
+    const apEnd = new Date(
+      new Date(editAppointmentInput.appointmentStart).getTime() +
+        editAppointmentInput.duration * (60 * 1000),
+    ).toISOString();
+
+    const scheduledAppointment = await this.appointmentsRepository.findOne({
+      where: {
+        id: Not(id),
+        roomId: editAppointmentInput.roomId,
+        appointmentEnd: MoreThanOrEqual(
+          `${dateFormat(apStart, 'yyyy-mm-dd HH:MM:ss')}`,
+        ),
+        appointmentStart: LessThanOrEqual(
+          `${dateFormat(apEnd, 'yyyy-mm-dd HH:MM:ss')}`,
+        ),
+      },
+    });
+
+    if (scheduledAppointment) {
+      throw new HttpException(
+        'There is an intersection of appointment time',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const updatedAppointment = await this.appointmentsRepository.update(
+      id,
+      editAppointmentInput,
+    );
+    if (!updatedAppointment) {
+      throw new HttpException(
+        "Appointment wasn't updated",
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    return await this.findOneById(id);
+  }
+
+  async findOneById(id: string): Promise<Appointment> {
+    const appointment = await this.appointmentsRepository.findOne(id);
+    if (!appointment) {
+      throw new HttpException('Appointment not found', HttpStatus.NOT_FOUND);
+    }
+    return appointment;
   }
 
   async findAll(): Promise<Appointment[]> {

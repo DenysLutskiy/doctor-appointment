@@ -18,6 +18,7 @@ import { PatientsService } from '../patients/patients.service';
 import { RoomsService } from '../rooms/rooms.service';
 import { CanPass } from 'src/utils/canpass.decorator';
 import { Roles } from 'src/types/enums/user-roles.enum';
+import { EditAppointmentInput } from './dto/edit-appointment.input';
 
 @Resolver('Appointment')
 export class AppointmentsResolver {
@@ -35,6 +36,17 @@ export class AppointmentsResolver {
     createAppointmentInput: CreateAppointmentInput,
   ): Promise<Appointment> {
     return this.appointmentsService.create(createAppointmentInput);
+  }
+
+  @Mutation('editAppointment')
+  @CanPass(Roles.ADMIN, Roles.DOCTOR)
+  edit(
+    @Args('appointmentId')
+    appointmentId: string,
+    @Args('editAppointmentInput')
+    editAppointmentInput: EditAppointmentInput,
+  ): Promise<Appointment> {
+    return this.appointmentsService.edit(appointmentId, editAppointmentInput);
   }
 
   @Query('appointments')
