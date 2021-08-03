@@ -29,25 +29,25 @@ import { AppointmentsModule } from './modules/appointments/appointments.module';
       useFactory: () => ({
         playground: true,
         typePaths: ['./**/*.graphql'],
-        formatError: (error: GraphQLError): GraphQLFormattedError => {
-          if (error instanceof ApolloError) {
-            const exceptionFilter = new HttpExceptionFilter();
-            return exceptionFilter.catch(error, null);
-          }
+        // formatError: (error: GraphQLError): GraphQLFormattedError => {
+        //   if (error instanceof ApolloError) {
+        //     const exceptionFilter = new HttpExceptionFilter();
+        //     return exceptionFilter.catch(error, null);
+        //   }
 
-          const errorId = error.extensions.errorId;
-          const code = error.message;
+        //   const errorId = error.extensions.errorId;
+        //   const code = error.message;
 
-          return new GraphQLError(
-            `${typeof code === 'number' ? HttpStatus[`${code}`] : code}`,
-            null,
-            null,
-            null,
-            null,
-            null,
-            { errorId },
-          );
-        },
+        //   return new GraphQLError(
+        //     `${typeof code === 'number' ? HttpStatus[`${code}`] : code}`,
+        //     null,
+        //     null,
+        //     null,
+        //     null,
+        //     null,
+        //     { errorId },
+        //   );
+        // },
       }),
     }),
     UsersModule,

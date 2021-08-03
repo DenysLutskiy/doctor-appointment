@@ -14,7 +14,6 @@ import { RestrictedRoomResolver } from 'src/types/unions/restristed-rooms.union'
 
 @Module({
   imports: [
-    // forwardRef(() => DoctorsModule),
     UsersModule,
     forwardRef(() => SpecializationsModule),
     AppointmentsModule,

@@ -19,6 +19,7 @@ import { RoomsService } from '../rooms/rooms.service';
 import { CanPass } from 'src/utils/canpass.decorator';
 import { Roles } from 'src/types/enums/user-roles.enum';
 import { EditAppointmentInput } from './dto/edit-appointment.input';
+import { ScheduledAppointment } from './entities/scheduled-appointment.entity';
 
 @Resolver('Appointment')
 export class AppointmentsResolver {
@@ -59,8 +60,15 @@ export class AppointmentsResolver {
   }
 
   @Query('appointments')
-  findAll(): Promise<Appointment[]> {
-    return this.appointmentsService.findAll();
+  findAll(
+    @Args('filter')
+    filter: string,
+    @Args('patientId')
+    patientId: string,
+    @Args('doctorId')
+    doctorId: string,
+  ): Promise<ScheduledAppointment[]> {
+    return this.appointmentsService.findAll(filter, patientId, doctorId);
   }
 
   @ResolveField('doctor')
@@ -74,7 +82,9 @@ export class AppointmentsResolver {
   }
 
   @ResolveField('room')
-  async getRoom(@Parent() appointment: Appointment): Promise<Room> {
+  async getRoom(@Parent() appointment: ScheduledAppointment): Promise<Room> {
+    console.log(appointment);
+
     return await this.roomsService.findOneById(appointment.roomId);
   }
 }
