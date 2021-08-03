@@ -82,10 +82,10 @@ export class AppointmentsService {
       );
     }
 
-    const updatedAppointment = await this.appointmentsRepository.update(
-      id,
-      editAppointmentInput,
-    );
+    const updatedAppointment = await this.appointmentsRepository.update(id, {
+      ...editAppointmentInput,
+      appointmentEnd: apEnd,
+    });
     if (!updatedAppointment) {
       throw new HttpException(
         "Appointment wasn't updated",
