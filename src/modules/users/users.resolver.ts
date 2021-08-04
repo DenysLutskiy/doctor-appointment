@@ -41,6 +41,7 @@ export class UsersResolver {
   }
 
   @Query('users')
+  @CanPass(Roles.ADMIN, Roles.DOCTOR)
   findAll(): Promise<User[]> {
     return this.usersService.findAll();
   }
