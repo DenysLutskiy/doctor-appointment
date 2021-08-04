@@ -78,7 +78,7 @@ export class DoctorsService {
   }
 
   async findOneById(
-    id: string,
+    id?: string,
     options?: FindOneOptions<Doctor>,
   ): Promise<Doctor> {
     try {

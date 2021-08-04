@@ -7,7 +7,7 @@ async function startServer(): Promise<void> {
   const PORT = process.env.PORT || 3000;
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe({ skipMissingProperties: true }));
-  // app.useGlobalFilters(new HttpExceptionFilter());
+  app.useGlobalFilters(new HttpExceptionFilter());
   await app.listen(PORT, () =>
     console.log(`Server running on http://localhost:${PORT}/graphql...`),
   );

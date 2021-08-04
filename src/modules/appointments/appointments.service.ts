@@ -21,6 +21,9 @@ import { EditAppointmentInput } from './dto/edit-appointment.input';
 import { ScheduledAppointment } from './entities/scheduled-appointment.entity';
 import { DoctorsService } from '../doctors/doctors.service';
 import { PatientsService } from '../patients/patients.service';
+import { User } from '../users/entities/user.entity';
+import { Roles } from 'src/types/enums/user-roles.enum';
+import { SearchFilter } from 'src/types/interfaces/searchfilter.interface';
 
 @Injectable()
 export class AppointmentsService {
@@ -136,11 +139,53 @@ export class AppointmentsService {
   }
 
   async findAll(
-    filter?: string,
+    user: User,
+    roomId?: string,
     patientId?: string,
     doctorId?: string,
   ): Promise<ScheduledAppointment[]> {
+    let doctor: string;
+    let patient: string;
+    const filter: SearchFilter = {};
+
+    if (
+      (user.role === Roles.ADMIN && doctorId) ||
+      (user.role === Roles.ADMIN && patientId)
+    ) {
+      if (doctorId) {
+        doctor = (await this.doctorsService.findOneById(doctorId)).id;
+        filter.doctorId = doctor;
+      }
+      if (patientId) {
+        patient = (await this.doctorsService.findOneById(doctorId)).id;
+        filter.patientId = patient;
+      }
+    }
+
+    if (user.role === Roles.DOCTOR) {
+      doctor = (
+        await this.doctorsService.findOneById(null, {
+          where: { userId: user.id },
+        })
+      ).id;
+      filter.doctorId = doctor;
+    }
+
+    if (user.role === Roles.PATIENT) {
+      patient = (
+        await this.doctorsService.findOneById(null, {
+          where: { userId: user.id },
+        })
+      ).id;
+      filter.patientId = patient;
+    }
+
+    if (roomId) {
+      filter.roomId = roomId;
+    }
+
     const appointments = await this.appointmentsRepository.find({
+      where: filter,
       relations: ['doctor', 'patient'],
     });
     const mappedAppointments = appointments.map(async (appointment) => {

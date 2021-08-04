@@ -1,10 +1,6 @@
 # ---------------------------------- Querys ---------------------------------- #
 type Query {
-  appointments(
-    filter: String
-    patientId: ID
-    doctorId: ID
-  ): [ScheduledAppointment]!
+  appointments(filter: ID, patientId: ID, doctorId: ID): [ScheduledAppointment]!
 }
 
 # --------------------------------- Mutations -------------------------------- #
