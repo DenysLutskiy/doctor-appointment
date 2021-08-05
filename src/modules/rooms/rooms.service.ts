@@ -7,10 +7,6 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Roles } from 'src/types/enums/user-roles.enum';
-import {
-  InfoForAdmin,
-  InfoForGuest,
-} from 'src/types/unions/restristed-rooms.union';
 import { FindOneOptions, ILike, Repository } from 'typeorm';
 
 import { AppointmentsService } from '../appointments/appointments.service';
@@ -101,10 +97,7 @@ export class RoomsService {
     return true;
   }
 
-  async findAll(
-    filter = '',
-    user: User,
-  ): Promise<InfoForAdmin[] | InfoForGuest[]> {
+  async findAll(filter = '', user: User): Promise<Room[]> {
     const resp: Room[] = await this.roomsRepository.find({
       where: [{ name: ILike(`%${filter}%`) }],
     });
