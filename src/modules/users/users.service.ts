@@ -69,43 +69,24 @@ export class UsersService {
     }
   }
 
-  async findAll(filter: SearchUserFilter = { roles: [] }): Promise<User[]> {
-    let input;
-    const users: User[] = [];
-    if (!filter.roles.length) {
-      filter.roles.push(...Object.values(Roles));
+  async findAll(filter = new SearchUserFilter()): Promise<User[]> {
+    !filter.roles ? (filter.roles = Object.values(Roles)) : null;
+    !filter.roles.length ? filter.roles.push(...Object.values(Roles)) : null;
+
+    const { roles, ...filterWithoutRoles } = filter;
+    const contains = [];
+
+    for (const role of roles) {
+      contains.push({ ...filterWithoutRoles, role });
     }
 
-    await Promise.all(
-      filter.roles.map(async (role) => {
-        input = {
-          firstName: ILike(`%${filter.firstName}%`),
-          lastName: ILike(`%${filter.lastName}%`),
-          mobilePhone: ILike(`%${filter.mobilePhone}%`),
-          email: ILike(`%${filter.email}%`),
-          role: Roles[`${role}`],
-          createdAt: filter.createdAt,
-        };
+    const users = await this.usersRepository.find({ where: contains });
 
-        Object.keys(input).map((key) => {
-          if (
-            !input[key] ||
-            input[key]._value === '%%' ||
-            !input[key].length ||
-            (!filter.hasOwnProperty(`${key}`) && key !== 'role')
-          ) {
-            delete input[key];
-          }
-        });
+    if (!users) {
+      throw new HttpException('No users was not found', HttpStatus.NOT_FOUND);
+    }
 
-        const contains = input;
-
-        users.push(...(await this.usersRepository.find({ where: contains })));
-      }),
-    );
-    const uniqueUsers = new Set(users);
-    const newUniqueUsers = Array.from(uniqueUsers);
-    return newUniqueUsers;
+    return users;
   }
 
   async findOneById(id: string): Promise<User> {
