@@ -23,7 +23,6 @@ import { DoctorsService } from '../doctors/doctors.service';
 import { PatientsService } from '../patients/patients.service';
 import { User } from '../users/entities/user.entity';
 import { Roles } from 'src/types/enums/user-roles.enum';
-import { SearchFilter } from 'src/types/interfaces/searchfilter.interface';
 
 @Injectable()
 export class AppointmentsService {
@@ -146,7 +145,7 @@ export class AppointmentsService {
   ): Promise<ScheduledAppointment[]> {
     let doctor: string;
     let patient: string;
-    const filter: SearchFilter = {};
+    const filter: Record<string, string> = {};
 
     if (
       (user.role === Roles.ADMIN && doctorId) ||
