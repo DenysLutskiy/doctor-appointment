@@ -1,6 +1,8 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOneOptions, Repository } from 'typeorm';
+
+import { AppointmentsService } from '../appointments/appointments.service';
 import { CreateRoomInput } from './dto/create-room.input';
 import { EditRoomInput } from './dto/edit-room.input';
 import { Room } from './entities/room.entity';
@@ -10,14 +12,12 @@ export class RoomsService {
   constructor(
     @InjectRepository(Room)
     private roomsRepository: Repository<Room>,
+    private readonly appointmentsService: AppointmentsService,
   ) {}
 
   async create(createRoomInput: CreateRoomInput): Promise<Room> {
-    try {
-      return await this.roomsRepository.save(createRoomInput);
-    } catch (err) {
-      throw new HttpException(err, HttpStatus.BAD_REQUEST);
-    }
+    const room: Room = await this.roomsRepository.save(createRoomInput);
+    return room;
   }
 
   async edit(id: string, editRoomInput: EditRoomInput): Promise<Room> {
@@ -26,6 +26,31 @@ export class RoomsService {
       throw new HttpException("Room wasn't updated", HttpStatus.BAD_REQUEST);
     }
     return await this.roomsRepository.findOne(id);
+  }
+
+  async delete(id: string): Promise<boolean> {
+    const appointments = await this.appointmentsService.findManyWithOptions({
+      where: { roomId: id },
+    });
+
+    if (appointments.length) {
+      throw new HttpException(
+        'The room can’t be removed if it attached to a scheduled appointment',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const room = await this.roomsRepository.findOne(id);
+    if (!room) {
+      throw new HttpException("Room wasn't found", HttpStatus.NOT_FOUND);
+    }
+
+    const deletedRoom = await this.roomsRepository.delete(id);
+    if (!deletedRoom) {
+      throw new HttpException("Room wasn't deleted", HttpStatus.BAD_REQUEST);
+    }
+
+    return true;
   }
 
   async findAll(): Promise<Room[]> {

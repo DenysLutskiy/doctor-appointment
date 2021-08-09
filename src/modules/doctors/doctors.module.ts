@@ -6,7 +6,6 @@ import { DoctorsResolver } from './doctors.resolver';
 import { Doctor } from './entities/doctor.entity';
 import { UsersModule } from 'src/modules/users/users.module';
 import { SpecializationsModule } from 'src/modules/specializations/specializations.module';
-import { AuthModule } from 'src/modules/auth/auth.module';
 import * as REDIS_CONFIG from 'src/config/redis';
 import { RoomsModule } from '../rooms/rooms.module';
 import { AppointmentsModule } from '../appointments/appointments.module';
@@ -15,7 +14,6 @@ import { AppointmentsModule } from '../appointments/appointments.module';
   imports: [
     UsersModule,
     forwardRef(() => SpecializationsModule),
-    AuthModule,
     forwardRef(() => RoomsModule),
     AppointmentsModule,
     CacheModule.register(REDIS_CONFIG),

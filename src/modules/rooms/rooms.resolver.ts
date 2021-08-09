@@ -40,6 +40,12 @@ export class RoomsResolver {
     return this.roomsService.edit(roomId, editRoomInput);
   }
 
+  @Mutation('deleteRoom')
+  @CanPass(Roles.ADMIN)
+  delete(@Args('roomId') roomId: string): Promise<boolean> {
+    return this.roomsService.delete(roomId);
+  }
+
   @Query('rooms')
   findAll(): Promise<Room[]> {
     return this.roomsService.findAll();

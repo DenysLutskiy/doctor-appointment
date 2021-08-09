@@ -7,6 +7,7 @@ type Query {
 type Mutation {
   createRoom(createRoomInput: CreateRoomInput!): Room!
   editRoom(roomId: ID!, editRoomInput: EditRoomInput!): Room!
+  deleteRoom(roomId: ID!): Boolean!
 }
 
 # -------------------------------- Input types ------------------------------- #

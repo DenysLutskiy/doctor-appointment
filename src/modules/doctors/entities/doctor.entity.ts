@@ -33,7 +33,7 @@ export class Doctor {
   specializationId: string;
 
   @OneToMany(() => Room, (room) => room.doctor)
-  rooms: Room;
+  rooms: Room[];
 
   @OneToMany(() => Appointment, (appointment) => appointment.doctor)
   appointments: Appointment;

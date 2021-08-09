@@ -7,14 +7,12 @@ import { Appointment } from './entities/appointment.entity';
 import { DoctorsModule } from '../doctors/doctors.module';
 import { PatientsModule } from '../patients/patients.module';
 import { RoomsModule } from '../rooms/rooms.module';
-import { AuthModule } from '../auth/auth.module';
 
 @Module({
   imports: [
-    AuthModule,
     forwardRef(() => DoctorsModule),
+    forwardRef(() => RoomsModule),
     PatientsModule,
-    RoomsModule,
     TypeOrmModule.forFeature([Appointment]),
   ],
   providers: [AppointmentsResolver, AppointmentsService],
