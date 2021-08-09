@@ -69,21 +69,40 @@ export class UsersService {
     }
   }
 
-  async findAll(filter = new SearchUserFilter()): Promise<User[]> {
-    !filter.roles ? (filter.roles = Object.values(Roles)) : null;
-    !filter.roles.length ? filter.roles.push(...Object.values(Roles)) : null;
-
-    const { roles, ...filterWithoutRoles } = filter;
+  async findAll(filter?: SearchUserFilter | undefined): Promise<User[]> {
     const contains = [];
+    if (Object.keys(filter).length) {
+      !filter.roles ? (filter.roles = Object.values(Roles)) : null;
+      !filter.roles.length ? filter.roles.push(...Object.values(Roles)) : null;
 
-    for (const role of roles) {
-      contains.push({ ...filterWithoutRoles, role });
+      for (const role of filter.roles) {
+        const input = {
+          firstName: ILike(`%${filter.firstName}%`),
+          lastName: ILike(`%${filter.lastName}%`),
+          mobilePhone: ILike(`%${filter.mobilePhone}%`),
+          email: ILike(`%${filter.email}%`),
+          role: Roles[`${role}`],
+          createdAt: filter.createdAt,
+        };
+
+        Object.keys(input).map((key) => {
+          if (
+            !input[key] ||
+            input[key]._value === '%%' ||
+            input[key]._value === '%undefined%'
+          ) {
+            delete input[key];
+          }
+        });
+        contains.push({ ...input });
+      }
+    } else {
+      contains.push('');
     }
 
     const users = await this.usersRepository.find({ where: contains });
-
     if (!users) {
-      throw new HttpException('No users was not found', HttpStatus.NOT_FOUND);
+      throw new HttpException('Users not found', HttpStatus.NOT_FOUND);
     }
 
     return users;
