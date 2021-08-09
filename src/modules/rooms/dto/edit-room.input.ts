@@ -2,7 +2,7 @@ import { Field, InputType } from '@nestjs/graphql';
 import { IsString, IsOptional } from 'class-validator';
 
 @InputType()
-export class CreateRoomInput {
+export class EditRoomInput {
   @Field()
   @IsString()
   name: string;

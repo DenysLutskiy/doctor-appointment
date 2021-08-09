@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOneOptions, Repository } from 'typeorm';
 import { CreateRoomInput } from './dto/create-room.input';
+import { EditRoomInput } from './dto/edit-room.input';
 import { Room } from './entities/room.entity';
 
 @Injectable()
@@ -17,6 +18,14 @@ export class RoomsService {
     } catch (err) {
       throw new HttpException(err, HttpStatus.BAD_REQUEST);
     }
+  }
+
+  async edit(id: string, editRoomInput: EditRoomInput): Promise<Room> {
+    const updatedRoom = await this.roomsRepository.update(id, editRoomInput);
+    if (!updatedRoom) {
+      throw new HttpException("Room wasn't updated", HttpStatus.BAD_REQUEST);
+    }
+    return await this.roomsRepository.findOne(id);
   }
 
   async findAll(): Promise<Room[]> {
