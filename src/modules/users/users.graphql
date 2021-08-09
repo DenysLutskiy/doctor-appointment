@@ -36,7 +36,7 @@ input SearchUserFilter {
   lastName: String
   email: String
   mobilePhone: String
-  roles: [String]
+  roles: [Roles]
   createdAt: Date
 }
 

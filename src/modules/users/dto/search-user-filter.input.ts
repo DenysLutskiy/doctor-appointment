@@ -1,35 +1,35 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { IsString, IsEmail, IsArray, IsOptional } from 'class-validator';
+import { IsString, IsArray, IsOptional } from 'class-validator';
 
 @InputType()
 export class SearchUserFilter {
   @Field()
   @IsString()
   @IsOptional()
-  firstName: string;
+  firstName?: string;
 
   @Field()
   @IsString()
   @IsOptional()
-  lastName: string;
+  lastName?: string;
 
   @Field()
   @IsString()
   @IsOptional()
-  mobilePhone: string;
+  mobilePhone?: string;
 
   @Field()
   @IsString()
   @IsOptional()
-  email: string;
+  email?: string;
 
   @Field()
   @IsArray()
   @IsOptional()
-  roles: string[];
+  roles?: string[];
 
   @Field()
   @IsString()
   @IsOptional()
-  createdAt: string;
+  createdAt?: string;
 }
