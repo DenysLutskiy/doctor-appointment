@@ -70,11 +70,7 @@ export class DoctorsService {
   }
 
   async findAll(): Promise<Doctor[]> {
-    try {
-      return await this.doctorsRepository.find();
-    } catch (err) {
-      throw new HttpException(err, HttpStatus.NOT_FOUND);
-    }
+    return await this.doctorsRepository.find({ relations: ['rooms'] });
   }
 
   async findOneById(id: string): Promise<Doctor> {
