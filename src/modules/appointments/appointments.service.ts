@@ -96,6 +96,18 @@ export class AppointmentsService {
     return await this.findOneById(id);
   }
 
+  async cancel(id: string): Promise<boolean> {
+    const delAp = await this.appointmentsRepository.softDelete(id);
+    if (!delAp) {
+      throw new HttpException(
+        "Appointment wasn't updated",
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    return true;
+  }
+
   async findOneById(id: string): Promise<Appointment> {
     const appointment = await this.appointmentsRepository.findOne(id);
     if (!appointment) {

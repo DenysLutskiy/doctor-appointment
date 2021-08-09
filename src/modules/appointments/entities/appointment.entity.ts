@@ -4,6 +4,7 @@ import { Room } from 'src/modules/rooms/entities/room.entity';
 import {
   Column,
   CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   JoinColumn,
   ManyToMany,
@@ -48,4 +49,7 @@ export class Appointment {
 
   @CreateDateColumn()
   createdAt: string;
+
+  @DeleteDateColumn()
+  deletedAt: string;
 }

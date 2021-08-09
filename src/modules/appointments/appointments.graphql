@@ -12,6 +12,7 @@ type Mutation {
     appointmentId: ID!
     editAppointmentInput: EditAppointmentInput!
   ): Appointment!
+  cancelAppointment(appointmentId: ID!): Boolean!
 }
 
 # -------------------------------- Input types ------------------------------- #
