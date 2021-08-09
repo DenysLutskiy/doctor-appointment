@@ -33,10 +33,10 @@ export class Doctor {
   specializationId: string;
 
   @OneToMany(() => Room, (room) => room.doctor)
-  rooms: Room;
+  rooms: Room[];
 
-  @Column('uuid', { array: true, nullable: true })
-  associatedRooms: string[];
+  // @Column('uuid', { array: true, nullable: true })
+  // associatedRooms: string[];
 
   @OneToMany(() => Appointment, (appointment) => appointment.doctor)
   appointments: Appointment;

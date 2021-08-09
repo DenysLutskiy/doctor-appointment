@@ -28,6 +28,7 @@ type Doctor {
   user: User!
   specialization: Specialization!
   level: String!
+  rooms: [Room]
   createdAt: String!
 }
 

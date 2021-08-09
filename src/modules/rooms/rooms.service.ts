@@ -27,18 +27,18 @@ export class RoomsService {
   async create(createRoomInput: CreateRoomInput): Promise<Room> {
     const room: Room = await this.roomsRepository.save(createRoomInput);
 
-    if (room && createRoomInput.doctorId) {
-      const doctor = await this.doctorsService.findOneById(
-        createRoomInput.doctorId,
-      );
+    // if (room && createRoomInput.doctorId) {
+    //   const doctor = await this.doctorsService.findOneById(
+    //     createRoomInput.doctorId,
+    //   );
 
-      const rooms = doctor.associatedRooms || [];
-      rooms.push(room.id);
-      const newRoomsList: EditDoctorInput = {
-        associatedRooms: rooms,
-      };
-      await this.doctorsService.edit(createRoomInput.doctorId, newRoomsList);
-    }
+    //   const rooms = doctor.associatedRooms || [];
+    //   rooms.push(room.id);
+    //   const newRoomsList: EditDoctorInput = {
+    //     associatedRooms: rooms,
+    //   };
+    //   await this.doctorsService.edit(createRoomInput.doctorId, newRoomsList);
+    // }
 
     return room;
   }
@@ -68,29 +68,29 @@ export class RoomsService {
       throw new HttpException("Room wasn't found", HttpStatus.NOT_FOUND);
     }
 
-    let associatedDoctor: string;
-    if (room.doctorId) {
-      associatedDoctor = room.doctorId;
-    }
+    // let associatedDoctor: string;
+    // if (room.doctorId) {
+    //   associatedDoctor = room.doctorId;
+    // }
 
     const deletedRoom = await this.roomsRepository.delete(id);
     if (!deletedRoom) {
       throw new HttpException("Room wasn't deleted", HttpStatus.BAD_REQUEST);
     }
 
-    let associatedRooms: string[];
-    if (associatedDoctor) {
-      associatedRooms = (
-        await this.doctorsService.findOneById(associatedDoctor)
-      ).associatedRooms;
-    }
+    // let associatedRooms: string[];
+    // if (associatedDoctor) {
+    //   associatedRooms = (
+    //     await this.doctorsService.findOneById(associatedDoctor)
+    //   ).associatedRooms;
+    // }
 
-    if (associatedRooms.length) {
-      const newRoomsList: EditDoctorInput = {
-        associatedRooms: associatedRooms.filter((roomId) => roomId !== id),
-      };
-      await this.doctorsService.edit(associatedDoctor, newRoomsList);
-    }
+    // if (associatedRooms.length) {
+    //   const newRoomsList: EditDoctorInput = {
+    //     associatedRooms: associatedRooms.filter((roomId) => roomId !== id),
+    //   };
+    //   await this.doctorsService.edit(associatedDoctor, newRoomsList);
+    // }
 
     return true;
   }
