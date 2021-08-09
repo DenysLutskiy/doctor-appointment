@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Any, ILike, Repository } from 'typeorm';
 import { v1 as uuid } from 'uuid';
 import * as bcrypt from 'bcrypt';
 
@@ -8,6 +8,8 @@ import { CreateUserInput } from './dto/create-user.input';
 import { EditUserInput } from './dto/edit-user.input';
 import { User } from './entities/user.entity';
 import { Roles } from 'src/types/enums/user-roles.enum';
+import { SearchUserFilter } from './dto/search-user-filter.input';
+import { contains } from 'class-validator';
 
 @Injectable()
 export class UsersService {
@@ -68,8 +70,40 @@ export class UsersService {
     }
   }
 
-  async findAll(): Promise<User[]> {
-    return await this.usersRepository.find();
+  async findAll(filter?: SearchUserFilter): Promise<User[]> {
+    let input;
+    const users: User[] = [];
+    filter.roles.map(async (role) => {
+      input = {
+        firstName: ILike(`%${filter.firstName}%`),
+        lastName: ILike(`%${filter.lastName}%`),
+        mobilePhone: ILike(`%${filter.mobilePhone}%`),
+        email: ILike(`%${filter.email}%`),
+        role: role,
+        createdAt: filter.createdAt,
+      };
+
+      Object.keys(input).map((key) => {
+        if (
+          !input[key] ||
+          input[key]._value === '%%' ||
+          !input[key].length ||
+          (!filter.hasOwnProperty(`${key}`) && key !== 'role')
+        ) {
+          delete input[key];
+        }
+      });
+
+      const contains = input;
+
+      users.push(...(await this.usersRepository.find({ where: contains })));
+    });
+    console.log(users);
+    const uniqueUsers = new Set(users);
+    const newUniqueUsers = Array.from(uniqueUsers);
+    console.log(newUniqueUsers);
+
+    return newUniqueUsers;
   }
 
   async findOneById(id: string): Promise<User> {

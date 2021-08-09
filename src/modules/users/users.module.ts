@@ -10,11 +10,11 @@ import { DoctorsModule } from '../doctors/doctors.module';
 
 @Module({
   imports: [
-    forwardRef(() => DoctorsModule),
+    // forwardRef(() => DoctorsModule),
     CacheModule.register(REDIS_CONFIG),
     TypeOrmModule.forFeature([User]),
   ],
-  providers: [UsersResolver, UsersService, RolesInfoResolver],
+  providers: [UsersResolver, UsersService],
   exports: [UsersService, TypeOrmModule],
 })
 export class UsersModule {}
