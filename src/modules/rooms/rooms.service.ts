@@ -67,7 +67,6 @@ export class RoomsService {
       );
       return resp;
     }
-    resp.map((room) => delete room.doctorId);
     return resp;
   }
 
