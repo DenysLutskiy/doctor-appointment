@@ -1,6 +1,6 @@
 # ---------------------------------- Querys ---------------------------------- #
 type Query {
-  rooms: [Room]!
+  rooms(filter: String): [Room]!
 }
 
 # --------------------------------- Mutations -------------------------------- #
@@ -25,6 +25,6 @@ input EditRoomInput {
 type Room {
   id: ID!
   name: String!
-  doctor: Doctor
+  doctorId: String
   createdAt: String!
 }
