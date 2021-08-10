@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindOneOptions, Repository } from 'typeorm';
 import { CreateUserInput } from '../users/dto/create-user.input';
 import { UsersService } from '../users/users.service';
 import { CreatePatientInput } from './dto/create-patient.input';
@@ -74,9 +74,9 @@ export class PatientsService {
     }
   }
 
-  findOneById(id: string): Promise<Patient> {
+  findOneById(id: string, options?: FindOneOptions<Patient>): Promise<Patient> {
     try {
-      return this.patientsRepository.findOne(id);
+      return this.patientsRepository.findOne(id, options);
     } catch (err) {
       throw new HttpException(err, HttpStatus.BAD_REQUEST);
     }

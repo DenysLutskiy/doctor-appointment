@@ -5,6 +5,7 @@ import {
   Args,
   ResolveField,
   Parent,
+  Context,
 } from '@nestjs/graphql';
 
 import { AppointmentsService } from './appointments.service';
@@ -19,6 +20,8 @@ import { RoomsService } from '../rooms/rooms.service';
 import { CanPass } from 'src/utils/canpass.decorator';
 import { Roles } from 'src/types/enums/user-roles.enum';
 import { EditAppointmentInput } from './dto/edit-appointment.input';
+import { ScheduledAppointment } from './entities/scheduled-appointment.entity';
+import { User } from '../users/entities/user.entity';
 
 @Resolver('Appointment')
 export class AppointmentsResolver {
@@ -59,8 +62,17 @@ export class AppointmentsResolver {
   }
 
   @Query('appointments')
-  findAll(): Promise<Appointment[]> {
-    return this.appointmentsService.findAll();
+  @CanPass(Roles.ADMIN, Roles.DOCTOR, Roles.PATIENT)
+  findAll(
+    @Context('user') user: User,
+    @Args('filter')
+    filter: string,
+    @Args('patientId')
+    patientId: string,
+    @Args('doctorId')
+    doctorId: string,
+  ): Promise<ScheduledAppointment[]> {
+    return this.appointmentsService.findAll(user, filter, patientId, doctorId);
   }
 
   @ResolveField('doctor')

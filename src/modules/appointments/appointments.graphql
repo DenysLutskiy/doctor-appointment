@@ -1,6 +1,6 @@
 # ---------------------------------- Querys ---------------------------------- #
 type Query {
-  appointments: [Appointment]!
+  appointments(filter: ID, patientId: ID, doctorId: ID): [ScheduledAppointment]!
 }
 
 # --------------------------------- Mutations -------------------------------- #
@@ -40,6 +40,15 @@ type Appointment {
   appointmentEnd: Date!
   duration: Int!
   createdAt: String!
+}
+
+type ScheduledAppointment {
+  id: ID!
+  doctorName: String!
+  patientName: String!
+  room: Room!
+  appointmentStart: Date!
+  duration: Int!
 }
 
 # ---------------------------------- Scalars --------------------------------- #

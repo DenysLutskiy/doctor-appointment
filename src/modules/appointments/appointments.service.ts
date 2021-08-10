@@ -1,17 +1,38 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  forwardRef,
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { LessThanOrEqual, MoreThanOrEqual, Not, Repository } from 'typeorm';
+import {
+  FindManyOptions,
+  LessThanOrEqual,
+  MoreThanOrEqual,
+  Not,
+  Repository,
+} from 'typeorm';
 import * as dateFormat from 'dateformat';
 
 import { CreateAppointmentInput } from './dto/create-appointment.input';
 import { Appointment } from './entities/appointment.entity';
 import { EditAppointmentInput } from './dto/edit-appointment.input';
+import { ScheduledAppointment } from './entities/scheduled-appointment.entity';
+import { DoctorsService } from '../doctors/doctors.service';
+import { PatientsService } from '../patients/patients.service';
+import { User } from '../users/entities/user.entity';
+import { Roles } from 'src/types/enums/user-roles.enum';
 
 @Injectable()
 export class AppointmentsService {
   constructor(
     @InjectRepository(Appointment)
     private appointmentsRepository: Repository<Appointment>,
+    @Inject(forwardRef(() => DoctorsService))
+    private doctorsService: DoctorsService,
+    @Inject(forwardRef(() => PatientsService))
+    private readonly patientsService: PatientsService,
   ) {}
 
   async create(
@@ -116,16 +137,80 @@ export class AppointmentsService {
     return appointment;
   }
 
-  async findAll(): Promise<Appointment[]> {
-    try {
-      return await this.appointmentsRepository.find();
-    } catch (err) {
-      throw new HttpException(err, HttpStatus.BAD_REQUEST);
+  async findAll(
+    user: User,
+    roomId?: string,
+    patientId?: string,
+    doctorId?: string,
+  ): Promise<ScheduledAppointment[]> {
+    let doctor: string;
+    let patient: string;
+    const filter: Record<string, string> = {};
+
+    if (
+      (user.role === Roles.ADMIN && doctorId) ||
+      (user.role === Roles.ADMIN && patientId)
+    ) {
+      if (doctorId) {
+        doctor = (await this.doctorsService.findOneById(doctorId)).id;
+        filter.doctorId = doctor;
+      }
+      if (patientId) {
+        patient = (await this.doctorsService.findOneById(doctorId)).id;
+        filter.patientId = patient;
+      }
     }
+
+    if (user.role === Roles.DOCTOR) {
+      doctor = (
+        await this.doctorsService.findOneById(null, {
+          where: { userId: user.id },
+        })
+      ).id;
+      filter.doctorId = doctor;
+    }
+
+    if (user.role === Roles.PATIENT) {
+      patient = (
+        await this.doctorsService.findOneById(null, {
+          where: { userId: user.id },
+        })
+      ).id;
+      filter.patientId = patient;
+    }
+
+    if (roomId) {
+      filter.roomId = roomId;
+    }
+
+    const appointments = await this.appointmentsRepository.find({
+      where: filter,
+      relations: ['doctor', 'patient'],
+    });
+    const mappedAppointments = appointments.map(async (appointment) => {
+      const patient = await this.patientsService.findOneById(
+        appointment.patientId,
+        { relations: ['user'] },
+      );
+      const doctor = await this.doctorsService.findOneById(
+        appointment.doctorId,
+        { relations: ['user'] },
+      );
+
+      const app: ScheduledAppointment = {
+        ...appointment,
+        patientName: `${patient.user.firstName} ${patient.user.lastName}`,
+        doctorName: `${doctor.user.firstName} ${doctor.user.lastName}`,
+      };
+      return app;
+    });
+
+    return (await Promise.all(mappedAppointments)) as ScheduledAppointment[];
   }
 
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  async findManyWithOptions(options: object): Promise<Appointment[]> {
+  async findManyWithOptions(
+    options: FindManyOptions<Appointment>,
+  ): Promise<Appointment[]> {
     try {
       return await this.appointmentsRepository.find(options);
     } catch (err) {

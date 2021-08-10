@@ -13,7 +13,6 @@ import { SpecializationsModule } from '../specializations/specializations.module
 
 @Module({
   imports: [
-    // forwardRef(() => DoctorsModule),
     UsersModule,
     forwardRef(() => SpecializationsModule),
     AppointmentsModule,
