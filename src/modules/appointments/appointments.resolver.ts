@@ -90,13 +90,3 @@ export class AppointmentsResolver {
     return await this.roomsService.findOneById(appointment.roomId);
   }
 }
-
-@Resolver('ScheduledAppointment')
-export class ScheduledAppointmentResolver {
-  constructor(private readonly roomsService: RoomsService) {}
-
-  @ResolveField('room')
-  async getRoom(@Parent() appointment: ScheduledAppointment): Promise<Room> {
-    return await this.roomsService.findOneById(appointment.roomId);
-  }
-}
