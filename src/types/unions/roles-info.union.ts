@@ -13,7 +13,7 @@ export class RolesInfoResolver {
   ) {}
 
   @ResolveField('roleInfo')
-  __resolveType(@Parent() user: User): any {
+  getRoleInfo(@Parent() user: User): any {
     if (user.role === Roles.DOCTOR) {
       return this.doctorsService.findOneById(null, {
         where: { userId: user.id },

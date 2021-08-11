@@ -1,6 +1,6 @@
 # ---------------------------------- Querys ---------------------------------- #
 type Query {
-  users(filter: SearchUserFilter): [User]!
+  users(input: SearchUserInput, filter: SearchUserFilter): [User]!
   getMe: User!
 }
 
@@ -31,11 +31,14 @@ input EditUserInput {
   role: Roles
 }
 
-input SearchUserFilter {
+input SearchUserInput {
   firstName: String
   lastName: String
   email: String
   mobilePhone: String
+}
+
+input SearchUserFilter {
   roles: [Roles]
   createdAt: Date
 }

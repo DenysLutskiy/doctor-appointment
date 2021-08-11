@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ILike, Repository } from 'typeorm';
+import { FindOperator, ILike, In, Repository } from 'typeorm';
 import { v1 as uuid } from 'uuid';
 import * as bcrypt from 'bcrypt';
 
@@ -8,7 +8,8 @@ import { CreateUserInput } from './dto/create-user.input';
 import { EditUserInput } from './dto/edit-user.input';
 import { User } from './entities/user.entity';
 import { Roles } from 'src/types/enums/user-roles.enum';
-import { SearchUserFilter } from './dto/search-user-filter.input';
+import { SearchUserInput } from './dto/search-user.input';
+import { SearchUserFilter } from './dto/search-user.filter';
 
 @Injectable()
 export class UsersService {
@@ -69,38 +70,40 @@ export class UsersService {
     }
   }
 
-  async findAll(filter?: SearchUserFilter | undefined): Promise<User[]> {
-    const contains = [];
-    if (Object.keys(filter).length) {
-      !filter.roles ? (filter.roles = Object.values(Roles)) : null;
-      !filter.roles.length ? filter.roles.push(...Object.values(Roles)) : null;
-
-      for (const role of filter.roles) {
-        const input = {
-          firstName: ILike(`%${filter.firstName}%`),
-          lastName: ILike(`%${filter.lastName}%`),
-          mobilePhone: ILike(`%${filter.mobilePhone}%`),
-          email: ILike(`%${filter.email}%`),
-          role: Roles[`${role}`],
-          createdAt: filter.createdAt,
-        };
-
-        Object.keys(input).map((key) => {
-          if (
-            !input[key] ||
-            input[key]._value === '%%' ||
-            input[key]._value === '%undefined%'
-          ) {
-            delete input[key];
-          }
-        });
-        contains.push({ ...input });
-      }
-    } else {
-      contains.push('');
+  async findAll(
+    input?: SearchUserInput,
+    filter?: SearchUserFilter,
+  ): Promise<User[]> {
+    interface FindUserForm {
+      firstName?: FindOperator<string>;
+      lastName?: FindOperator<string>;
+      email?: FindOperator<string>;
+      mobilePhone?: FindOperator<string>;
+      role?: FindOperator<string>;
+      createdAt?: string;
     }
 
-    const users = await this.usersRepository.find({ where: contains });
+    const contains: FindUserForm = {};
+
+    if (input) {
+      input.firstName && (contains.firstName = ILike(`%${input.firstName}%`));
+
+      input.lastName && (contains.lastName = ILike(`%${input.lastName}%`));
+
+      input.email && (contains.email = ILike(`%${input.email}%`));
+
+      input.mobilePhone &&
+        (contains.mobilePhone = ILike(`%${input.mobilePhone}%`));
+    }
+
+    if (filter) {
+      filter.roles &&
+        (contains.role = In(filter.roles.map((role) => role.toLowerCase())));
+
+      filter.createdAt && (contains.createdAt = filter.createdAt);
+    }
+
+    const users = await this.usersRepository.find({ where: contains ?? '' });
     if (!users) {
       throw new HttpException('Users not found', HttpStatus.NOT_FOUND);
     }
