@@ -12,7 +12,7 @@ import { AppointmentsModule } from '../appointments/appointments.module';
 
 @Module({
   imports: [
-    UsersModule,
+    forwardRef(() => UsersModule),
     forwardRef(() => SpecializationsModule),
     forwardRef(() => RoomsModule),
     AppointmentsModule,

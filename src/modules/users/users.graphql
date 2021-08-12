@@ -52,7 +52,7 @@ type User {
   email: String!
   login: String!
   role: String!
-  #roleInfo: RolesInfo!
+  roleInfo: RolesInfo!
   createdAt: String!
 }
 

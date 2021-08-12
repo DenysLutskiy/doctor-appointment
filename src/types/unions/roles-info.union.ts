@@ -6,7 +6,7 @@ import { Patient } from 'src/modules/patients/entities/patient.entity';
 import { User } from 'src/modules/users/entities/user.entity';
 import { Roles } from '../enums/user-roles.enum';
 @Resolver('User')
-export class RolesInfoResolver {
+export class RolesInfoFieldResolver {
   constructor(
     @Inject(forwardRef(() => DoctorsService))
     private readonly doctorsService: DoctorsService,
@@ -19,6 +19,17 @@ export class RolesInfoResolver {
         where: { userId: user.id },
       });
     }
+  }
+}
+
+@Resolver('RolesInfo')
+export class RolesInfoTypeResolver {
+  @ResolveField()
+  __resolveType(value): any {
+    if (value.level) {
+      return 'Doctor';
+    }
+    return null;
   }
 }
 

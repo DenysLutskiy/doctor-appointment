@@ -13,7 +13,7 @@ import { SpecializationsModule } from '../specializations/specializations.module
 
 @Module({
   imports: [
-    UsersModule,
+    forwardRef(() => UsersModule),
     forwardRef(() => SpecializationsModule),
     AppointmentsModule,
     CacheModule.register(REDIS_CONFIG),
