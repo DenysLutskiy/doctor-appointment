@@ -60,7 +60,7 @@ export class PatientsService {
         );
       }
       await this.patientsRepository.update(patientId, editPatientInput);
-      return await this.findOneById(patientId);
+      return await this.findOne(patientId);
     } catch (err) {
       throw new HttpException(err, HttpStatus.BAD_REQUEST);
     }
@@ -74,7 +74,7 @@ export class PatientsService {
     }
   }
 
-  findOneById(id: string, options?: FindOneOptions<Patient>): Promise<Patient> {
+  findOne(id?: string, options?: FindOneOptions<Patient>): Promise<Patient> {
     try {
       return this.patientsRepository.findOne(id, options);
     } catch (err) {

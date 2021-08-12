@@ -63,7 +63,7 @@ export class DoctorsService {
   async edit(id: string, editDoctorInput: EditDoctorInput): Promise<Doctor> {
     try {
       await this.doctorsRepository.update(id, editDoctorInput);
-      return this.findOneById(id);
+      return this.findOne(id);
     } catch (err) {
       throw new HttpException(err, HttpStatus.BAD_REQUEST);
     }
@@ -73,7 +73,7 @@ export class DoctorsService {
     return await this.doctorsRepository.find({ relations: ['rooms'] });
   }
 
-  async findOneById(
+  async findOne(
     id?: string,
     options?: FindOneOptions<Doctor>,
   ): Promise<Doctor> {

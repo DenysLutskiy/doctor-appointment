@@ -65,4 +65,4 @@ enum Roles {
 }
 
 # ---------------------------------- Unions ---------------------------------- #
-union RolesInfo = Patient | Doctor
+union RolesInfo = Patient | Doctor | Admin | Guest

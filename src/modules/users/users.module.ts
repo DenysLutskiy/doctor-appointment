@@ -10,9 +10,11 @@ import {
   RolesInfoTypeResolver,
 } from 'src/types/unions/roles-info.union';
 import { DoctorsModule } from '../doctors/doctors.module';
+import { PatientsModule } from '../patients/patients.module';
 
 @Module({
   imports: [
+    PatientsModule,
     forwardRef(() => DoctorsModule),
     CacheModule.register(REDIS_CONFIG),
     TypeOrmModule.forFeature([User]),

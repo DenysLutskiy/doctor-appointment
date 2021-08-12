@@ -53,7 +53,7 @@ export class PatientsResolver {
 
   @Query('patient')
   findOne(@Args('patientId') patientId: string): Promise<Patient> {
-    return this.patientsService.findOneById(patientId);
+    return this.patientsService.findOne(patientId);
   }
 
   @ResolveField('user')

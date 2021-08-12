@@ -43,3 +43,11 @@ type Patient {
   address: String!
   createdAt: String!
 }
+
+type Admin {
+  permissions: String!
+}
+
+type Guest {
+  registered: Boolean!
+}

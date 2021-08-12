@@ -77,12 +77,12 @@ export class AppointmentsResolver {
 
   @ResolveField('doctor')
   async getDoctor(@Parent() appointment: Appointment): Promise<Doctor> {
-    return await this.doctorsService.findOneById(appointment.doctorId);
+    return await this.doctorsService.findOne(appointment.doctorId);
   }
 
   @ResolveField('patient')
   async getPatient(@Parent() appointment: Appointment): Promise<Patient> {
-    return await this.patientsService.findOneById(appointment.patientId);
+    return await this.patientsService.findOne(appointment.patientId);
   }
 
   @ResolveField('room')

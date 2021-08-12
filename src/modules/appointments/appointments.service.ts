@@ -152,18 +152,18 @@ export class AppointmentsService {
       (user.role === Roles.ADMIN && patientId)
     ) {
       if (doctorId) {
-        doctor = (await this.doctorsService.findOneById(doctorId)).id;
+        doctor = (await this.doctorsService.findOne(doctorId)).id;
         filter.doctorId = doctor;
       }
       if (patientId) {
-        patient = (await this.doctorsService.findOneById(doctorId)).id;
+        patient = (await this.doctorsService.findOne(doctorId)).id;
         filter.patientId = patient;
       }
     }
 
     if (user.role === Roles.DOCTOR) {
       doctor = (
-        await this.doctorsService.findOneById(null, {
+        await this.doctorsService.findOne(null, {
           where: { userId: user.id },
         })
       ).id;
@@ -172,7 +172,7 @@ export class AppointmentsService {
 
     if (user.role === Roles.PATIENT) {
       patient = (
-        await this.doctorsService.findOneById(null, {
+        await this.doctorsService.findOne(null, {
           where: { userId: user.id },
         })
       ).id;
@@ -188,14 +188,13 @@ export class AppointmentsService {
       relations: ['doctor', 'patient'],
     });
     const mappedAppointments = appointments.map(async (appointment) => {
-      const patient = await this.patientsService.findOneById(
+      const patient = await this.patientsService.findOne(
         appointment.patientId,
         { relations: ['user'] },
       );
-      const doctor = await this.doctorsService.findOneById(
-        appointment.doctorId,
-        { relations: ['user'] },
-      );
+      const doctor = await this.doctorsService.findOne(appointment.doctorId, {
+        relations: ['user'],
+      });
 
       const app: ScheduledAppointment = {
         ...appointment,
