@@ -13,11 +13,14 @@ export class RolesInfoFieldResolver {
   ) {}
 
   @ResolveField('roleInfo')
-  getRoleInfo(@Parent() user: User): any {
+  async getRoleInfo(@Parent() user: User): Promise<any> {
     if (user.role === Roles.DOCTOR) {
-      return this.doctorsService.findOneById(null, {
+      const doctor = await this.doctorsService.findOneById(null, {
         where: { userId: user.id },
       });
+      console.log(doctor);
+
+      return doctor;
     }
   }
 }
@@ -28,6 +31,9 @@ export class RolesInfoTypeResolver {
   __resolveType(value): any {
     if (value.level) {
       return 'Doctor';
+    }
+    if (value.gender) {
+      return 'Patient';
     }
     return null;
   }
