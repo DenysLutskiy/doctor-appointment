@@ -1,6 +1,6 @@
 # ---------------------------------- Querys ---------------------------------- #
 type Query {
-  users: [User]!
+  users(input: SearchUserInput, filter: SearchUserFilter): [User]!
   getMe: User!
 }
 
@@ -31,6 +31,18 @@ input EditUserInput {
   role: Roles
 }
 
+input SearchUserInput {
+  firstName: String
+  lastName: String
+  email: String
+  mobilePhone: String
+}
+
+input SearchUserFilter {
+  roles: [Roles]
+  createdAt: Date
+}
+
 # --------------------------------- Entities --------------------------------- #
 type User {
   id: ID!
@@ -40,6 +52,7 @@ type User {
   email: String!
   login: String!
   role: String!
+  roleInfo: RolesInfo!
   createdAt: String!
 }
 
@@ -50,3 +63,6 @@ enum Roles {
   DOCTOR
   ADMIN
 }
+
+# ---------------------------------- Unions ---------------------------------- #
+union RolesInfo = Patient | Doctor | Admin | Guest

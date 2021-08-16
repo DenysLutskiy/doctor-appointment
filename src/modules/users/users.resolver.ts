@@ -6,6 +6,8 @@ import { User } from './entities/user.entity';
 import { EditUserInput } from './dto/edit-user.input';
 import { CanPass } from 'src/utils/canpass.decorator';
 import { Roles } from 'src/types/enums/user-roles.enum';
+import { SearchUserInput } from './dto/search-user.input';
+import { SearchUserFilter } from './dto/search-user.filter';
 
 @Resolver('User')
 export class UsersResolver {
@@ -41,7 +43,11 @@ export class UsersResolver {
   }
 
   @Query('users')
-  findAll(): Promise<User[]> {
-    return this.usersService.findAll();
+  @CanPass(Roles.ADMIN, Roles.DOCTOR)
+  findAll(
+    @Args('input') input: SearchUserInput,
+    @Args('filter') filter: SearchUserFilter,
+  ): Promise<User[]> {
+    return this.usersService.findAll(input, filter);
   }
 }

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { SpecializationsService } from './specializations.service';
@@ -7,7 +7,10 @@ import { Specialization } from './entities/specialization.entity';
 import { DoctorsModule } from '../doctors/doctors.module';
 
 @Module({
-  imports: [DoctorsModule, TypeOrmModule.forFeature([Specialization])],
+  imports: [
+    forwardRef(() => DoctorsModule),
+    TypeOrmModule.forFeature([Specialization]),
+  ],
   providers: [SpecializationsResolver, SpecializationsService],
   exports: [SpecializationsService, TypeOrmModule],
 })
